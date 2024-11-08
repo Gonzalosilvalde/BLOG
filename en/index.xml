@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gonzalo Silvalde</title>
+    <link>https://Gonzalosilvalde.github.io/en/</link>
+    <description>Recent content on Gonzalo Silvalde</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 07 Nov 2024 23:07:25 +0100</lastBuildDate><atom:link href="https://Gonzalosilvalde.github.io/en/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://Gonzalosilvalde.github.io/en/about/</link>
+      <pubDate>Thu, 07 Nov 2024 23:07:25 +0100</pubDate>
+      
+      <guid>https://Gonzalosilvalde.github.io/en/about/</guid>
+      <description>&lt;p&gt;Hi! I’m Gonzalo Silvalde Blanco, a Computer Engineering student specializing in Computing at the University of A Coruña. I’m passionate about technology and constantly seeking new challenges, which has helped me develop strong skills in programming, algorithm design, and data analysis.&lt;/p&gt;
+&lt;p&gt;I thrive in team environments, often taking on leadership roles, and I enjoy tackling complex problems with determination. Currently, I’m contributing to the Linux kernel, where I’ve had the privilege to make a meaningful contribution—an experience that has been incredibly rewarding.&lt;/p&gt;</description>
+      <content>&lt;p&gt;Hi! I’m Gonzalo Silvalde Blanco, a Computer Engineering student specializing in Computing at the University of A Coruña. I’m passionate about technology and constantly seeking new challenges, which has helped me develop strong skills in programming, algorithm design, and data analysis.&lt;/p&gt;
+&lt;p&gt;I thrive in team environments, often taking on leadership roles, and I enjoy tackling complex problems with determination. Currently, I’m contributing to the Linux kernel, where I’ve had the privilege to make a meaningful contribution—an experience that has been incredibly rewarding.&lt;/p&gt;
+&lt;p&gt;I’m fluent in both Spanish and Galician, with full professional proficiency in English, which allows me to engage and learn in international settings. My technical skills include proficiency in Python, Java, C, Scala, and recently Rust, thanks to advanced courses I&amp;rsquo;ve completed on Udemy, including deep learning with PyTorch.&lt;/p&gt;
+&lt;p&gt;I aim to keep growing professionally and to leverage my skills to solve meaningful problems. Thanks for stopping by!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Contact&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Correo&lt;/strong&gt;: &lt;a href=&#34;mailto:gonzalo.silvalde@gmail.com&#34;&gt;gonzalo.silvalde@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;LinkedIn&lt;/strong&gt;: &lt;a href=&#34;https://www.linkedin.com/in/gonzalo-silvalde-blanco-086942246/&#34;&gt;linkedin.com/in/gonzalo-silvalde-blanco&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href=&#34;https://github.com/Gonzalosilvalde&#34;&gt;github.com/Gonzalosilvalde&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Getting Started with ADA</title>
+      <link>https://Gonzalosilvalde.github.io/en/posts/ada-introduction/</link>
+      <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://Gonzalosilvalde.github.io/en/posts/ada-introduction/</guid>
+      <description>A practical approach to Ada, an uncommon yet powerful language, ideal for high-security systems. From basic concepts to advanced challenges, discover how I began experimenting with its functions and tools.</description>
+      <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;A few weeks ago, a colleague mentioned Ada to me, a language I knew vaguely for its speed and its applications in the aerospace industry, especially in aircraft development. With this minimal knowledge, I dove into the world of Ada.&lt;/p&gt;
+&lt;p&gt;My curiosity grew as I noticed the scarcity of informal resources for learning the language, like videos or basic tutorials. I found incomplete YouTube playlists and blogs that only covered basic topics like loops. Surprisingly, I couldn’t even find courses on popular platforms like Udemy or Coursera. This might discourage anyone, but in my case, I took it as a challenge and decided to explore this language that&amp;rsquo;s so outside the mainstream.&lt;/p&gt;
+&lt;h1 id=&#34;first-steps&#34;&gt;First Steps&lt;/h1&gt;
+&lt;p&gt;As is usually the case when learning a new language, the first thing I did was consult the &lt;a href=&#34;https://www.adacore.com/documentation#all&#34;&gt;official documentation&lt;/a&gt;. With a reference manual and the guide from &lt;a href=&#34;https://www.adacore.com/documentation#all&#34;&gt;AdaCore&lt;/a&gt; in hand, I started taking my first steps.&lt;/p&gt;
+&lt;h3 id=&#34;hello-worldhttpsgithubcomgonzalosilvaldeadatreehola_mundo&#34;&gt;&lt;a href=&#34;https://github.com/Gonzalosilvalde/ADA/tree/Hola_mundo&#34;&gt;HELLO WORLD&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;My first impression when writing a &lt;code&gt;hello world&lt;/code&gt; was that Ada had a somewhat rustic style, similar to &lt;code&gt;Pascal&lt;/code&gt;, with its &lt;code&gt;procedures&lt;/code&gt;, &lt;code&gt;begin&lt;/code&gt;, and &lt;code&gt;end&lt;/code&gt;. I also noticed an indentation format similar to Python. I didn’t find here the complexity that sometimes appears in other languages, like Java, when writing a simple program. This gave me confidence to continue.&lt;/p&gt;
+&lt;h3 id=&#34;functionshttpsgithubcomgonzalosilvaldeadatreefunctions&#34;&gt;&lt;a href=&#34;https://github.com/Gonzalosilvalde/ADA/tree/Functions&#34;&gt;Functions&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;With a bit of confidence, I decided to move quickly and dive into the topic of functions. Here, Ada also reminded me of &lt;code&gt;Pascal&lt;/code&gt;, especially with the distinction between &lt;code&gt;procedure&lt;/code&gt; (which returns nothing) and &lt;code&gt;function&lt;/code&gt; (which does return a value). The difference is that, in Ada, the return type is placed at the end of the function, in contrast to languages like &lt;code&gt;C&lt;/code&gt;, where it appears at the beginning. I implemented some simple functions for basic mathematical operations, without too many surprises in this regard.&lt;/p&gt;
+&lt;h3 id=&#34;recursionhttpsgithubcomgonzalosilvaldeadatreerecursion&#34;&gt;&lt;a href=&#34;https://github.com/Gonzalosilvalde/ADA/tree/recursion&#34;&gt;Recursion&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Although recursion is not usually popular among programmers, I have always found something aesthetically interesting about its use, and it’s a topic I often test when learning a new language.&lt;/p&gt;
+&lt;p&gt;Recursion in Ada presented no issues, until I tried calculating high numbers in the Fibonacci sequence. For small numbers, everything worked well; however, when reaching higher values, I encountered an error due to integer size limitations. Looking for a solution, I discovered the &lt;a href=&#34;https://learn.adacore.com/courses/whats-new-in-ada-2022/chapters/big_numbers.html&#34;&gt;Big Numbers&lt;/a&gt; package, but when I tried compiling it, I encountered an error indicating that the package didn&amp;rsquo;t exist. This led me to explore Alire, Ada&amp;rsquo;s package manager, and while it didn&amp;rsquo;t solve my problem at that moment, it was my first introduction to this tool.&lt;/p&gt;
+&lt;h3 id=&#34;alirehttpsalireadadev&#34;&gt;&lt;a href=&#34;https://alire.ada.dev/&#34;&gt;Alire&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In my &lt;a href=&#34;https://github.com/Gonzalosilvalde/ADA/tree/main&#34;&gt;repository&lt;/a&gt;, there&amp;rsquo;s a branch called &amp;ldquo;Alire,&amp;rdquo; though I haven&amp;rsquo;t delved deeply into using this package manager yet. Here are my first impressions of Alire.&lt;/p&gt;
+&lt;p&gt;To begin with, Alire is a package manager for Ada. If you have experience with Rust, you&amp;rsquo;ll quickly notice that Alire is comparable to Cargo, though with some differences that make it interesting. However, the Alire community is relatively small, which is reflected in the quantity and variety of available packages. When browsing the list of crates on &lt;a href=&#34;https://alire.ada.dev/crates.html&#34;&gt;its website&lt;/a&gt;, it feels like many packages are overly specific, and the lack of a large and diverse community limits the options and breadth of applications.&lt;/p&gt;
+&lt;p&gt;When compared to &lt;a href=&#34;https://crates.io/&#34;&gt;crates.io&lt;/a&gt; from Cargo, the difference is clear. Cargo&amp;rsquo;s website is much more user-friendly, with an advanced search and tags that make it easier to find packages of interest without relying so much on exact names or descriptions. In Alire, the search can sometimes be less efficient, and navigation between categories isn&amp;rsquo;t as intuitive; although, interestingly, using &lt;code&gt;ctrl + f&lt;/code&gt; and tags manually can be more practical.&lt;/p&gt;
+&lt;p&gt;Additionally, I&amp;rsquo;ve experienced some inconveniences when compiling with Alire. While I appreciate the programming errors and important warnings, the style warnings can sometimes feel excessive, especially in personal projects where following a specific format isn&amp;rsquo;t as relevant. I understand that these warnings can be useful for learning the language&amp;rsquo;s conventions, but in my case, I prefer to focus on functionality over style. There might be a way to disable these style warnings, but I haven&amp;rsquo;t explored it fully yet.&lt;/p&gt;
+&lt;p&gt;In summary, I believe Alire has potential, but the lack of community limits the development of a broader and more robust ecosystem. With a more active community, these limitations would likely be gradually overcome.&lt;/p&gt;
+&lt;h3 id=&#34;semaphoreshttpsgithubcomgonzalosilvaldeadatreealire&#34;&gt;&lt;a href=&#34;https://github.com/Gonzalosilvalde/ADA/tree/alire&#34;&gt;Semaphores&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;This is the previously mentioned project called Alire, although it doesn’t actually leverage this package manager. My goal in this code was to explore both concurrency and parallelism in Ada, which, from what I’ve researched, seems to be one of the language&amp;rsquo;s strong points. Getting everything to work correctly wasn&amp;rsquo;t easy; as I mentioned earlier, the style warnings from Alire, though useful in other contexts, didn&amp;rsquo;t help in identifying actual functional issues. However, with persistence, I managed to build a functional simulation of a traffic system with traffic lights and vehicles. Here are some project highlights:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I implemented tasks for the traffic lights and vehicles so that each one could monitor and coordinate with the others&amp;rsquo; state.&lt;/li&gt;
+&lt;li&gt;To ensure vehicles could cross the intersection without collisions, I used a protected type called &lt;code&gt;Intersection&lt;/code&gt;. Protected types in Ada allow controlled concurrent access to shared resources, which is essential in systems where multiple processes might access the same resource.&lt;/li&gt;
+&lt;li&gt;To manage state changes in the traffic light and receive vehicle requests, I used entries in the &lt;code&gt;TrafficLight&lt;/code&gt; task like &lt;code&gt;Change_To_Green&lt;/code&gt; and &lt;code&gt;Change_To_Red&lt;/code&gt;. Using the &lt;code&gt;select&lt;/code&gt; statement, I was able to make the traffic light accept these entry calls based on its current state.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;motion-detectorhttpsgithubcomgonzalosilvaldeadatreemotion-detection-project&#34;&gt;&lt;a href=&#34;https://github.com/Gonzalosilvalde/ADA/tree/motion-detection-project&#34;&gt;Motion Detector&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;In this project, I ultimately decided to set Alire aside for another time and treat it as a future learning opportunity. The idea to implement a motion detector arose for two reasons: first, upon exploring Alire’s crates page, I noticed there wasn’t anything comparable to OpenCV; second, I remembered a previous project where I integrated C code into Rust using &lt;code&gt;Cargo&lt;/code&gt;. While this introduced unsafe code somewhat contrary to Rust&amp;rsquo;s philosophy, it was a good opportunity to experiment. This time, I wanted to try something new and explore Ada&amp;rsquo;s possibilities in combination with &lt;code&gt;OpenCV&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;My approach was to identify which OpenCV functions were necessary to implement a motion detector in C++ and then develop a wrapper that could integrate with Ada. This wrapper manages the creation of the detector, frame capture, and motion processing operations. Through &lt;code&gt;pragma Import&lt;/code&gt;, I exposed the C++ wrapper functions to Ada, allowing me to work with these OpenCV functionalities directly from Ada code. This experience helped me understand how to handle interoperability between Ada and C++, especially in more complex projects.&lt;/p&gt;
+&lt;p&gt;During development, learning to coordinate concurrent tasks was also key. The &lt;code&gt;Save_Motion&lt;/code&gt; task runs in parallel, saving frames with detected motion without interfering with real-time capture. Ada facilitated this structure through the use of tasks, and I learned a lot about managing real-time systems. Synchronizing shared resources was another challenge that Ada helped simplify, especially in coordinating safe access to OpenCV resources.&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

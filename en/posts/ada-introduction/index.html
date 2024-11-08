@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Getting Started with ADA :: Gonzalo Silvalde</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A practical approach to Ada, an uncommon yet powerful language, ideal for high-security systems. From basic concepts to advanced challenges, discover how I began experimenting with its functions and tools." />
+<meta name="keywords" content="blog, hugo, terminal" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://Gonzalosilvalde.github.io/en/posts/ada-introduction/" />
+
+
+
+
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/header.min.6e58d124677562e151011593241cbd93a58c516c47364b8c0850b1e4ef324e93.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/main.min.82d69168a7a6545ebbe5f4a7bb1d35b99c8d2187647f0fd25ed0da2d91d1afe0.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/menu.min.132ca89d1843b826277ffa36aee5dab455d2335eaced4993b7cef02182138138.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/post.min.fc74ca360273c1d828da3c02b8174eba435607b369d98418ccc6f2243cd4e75d.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/terminal.min.dd0bf9c7cacb24c1b0184f52f1869b274e06689557468cc7030ccf632328eb97.css">
+
+  
+  <link rel="stylesheet" href="https://Gonzalosilvalde.github.io/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="https://Gonzalosilvalde.github.io/favicon.png">
+<link rel="apple-touch-icon" href="https://Gonzalosilvalde.github.io/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Getting Started with ADA">
+<meta property="og:description" content="A practical approach to Ada, an uncommon yet powerful language, ideal for high-security systems. From basic concepts to advanced challenges, discover how I began experimenting with its functions and tools." />
+<meta property="og:url" content="https://Gonzalosilvalde.github.io/en/posts/ada-introduction/" />
+<meta property="og:site_name" content="Gonzalo Silvalde" />
+
+  <meta property="og:image" content="https://Gonzalosilvalde.github.io/og-image.png">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2024-11-07 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  
+
+<header class="header">
+  <div class="header__inner">
+    
+    <div class="header__logo">
+      <a href="/en/">
+  <div class="logo">
+    Gonzalo
+  </div>
+</a>
+
+    </div>
+    
+    
+    <div class="header__menu">
+      <div class="header__lines">
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+
+      
+      
+        <ul class="menu menu--desktop menu--language-selector">
+  <li class="menu__trigger">English&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        <li><a href="https://Gonzalosilvalde.github.io/en/posts/ada-introduction/">English</a></li>
+      
+        <li><a href="https://Gonzalosilvalde.github.io/es/posts/ada-introduction/">Español</a></li>
+      
+    </ul>
+  </li>
+</ul>
+
+      
+    </div>
+  </div>
+  
+  
+  <div class="header__social-container">
+    
+    <div class="header__social">
+      <a href="https://github.com/Gonzalosilvalde" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 .5C5.7.5.8 5.4.8 11.7c0 4.9 3.2 9 7.6 10.5.6.1.8-.3.8-.6v-2c-3.1.6-3.7-1.4-3.7-1.4-.6-1.5-1.5-1.9-1.5-1.9-1.2-.8.1-.8.1-.8 1.3.1 2 .8 2.3 1.1 1.1 2 2.9 1.4 3.6 1.1.1-.8.4-1.4.8-1.7-2.5-.3-5.2-1.3-5.2-5.7 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.4.1-2.8 0 0 1-.3 3.4 1.2a11.6 11.6 0 0 1 6.2 0c2.5-1.5 3.4-1.2 3.4-1.2.6 1.4.3 2.5.1 2.8.8.9 1.2 2 1.2 3.3 0 4.4-2.7 5.4-5.3 5.7.5.4.8 1.2.8 2.4v3.6c0 .3.2.7.8.6 4.4-1.5 7.6-5.6 7.6-10.5C23.2 5.4 18.3.5 12 .5z"/>
+        </svg>
+      </a>
+    </div>
+    <div class="header__socialb">
+      <a href="https://www.linkedin.com/in/gonzalo-silvalde-blanco-086942246/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 8h4v12H3V8zm7.5 0h3.9v1.68h.06c.54-1.02 1.88-2.1 3.87-2.1 4.14 0 4.9 2.73 4.9 6.28V20h-4v-5.46c0-1.3-.03-2.96-1.8-2.96-1.8 0-2.08 1.4-2.08 2.86V20h-4V8z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+   <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/en/tags/" >Tags</a></li>
+        
+      
+        
+          <li><a href="/en/about/" >About</a></li>
+        
+      
+    
+  </ul>
+</nav>
+ 
+</header>
+
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://Gonzalosilvalde.github.io/en/posts/ada-introduction/">Getting Started with ADA</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2024-11-07</time></div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://Gonzalosilvalde.github.io/en/tags/programming/">programming</a>&nbsp;
+      
+      #<a href="https://Gonzalosilvalde.github.io/en/tags/ada-lang/">ada-lang</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h2 id="ada">ADA<a href="#ada" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<h1 id="introduction">Introduction<a href="#introduction" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<p>A few weeks ago, a colleague mentioned Ada to me, a language I knew vaguely for its speed and its applications in the aerospace industry, especially in aircraft development. With this minimal knowledge, I dove into the world of Ada.</p>
+<p>My curiosity grew as I noticed the scarcity of informal resources for learning the language, like videos or basic tutorials. I found incomplete YouTube playlists and blogs that only covered basic topics like loops. Surprisingly, I couldn’t even find courses on popular platforms like Udemy or Coursera. This might discourage anyone, but in my case, I took it as a challenge and decided to explore this language that&rsquo;s so outside the mainstream.</p>
+<h1 id="first-steps">First Steps<a href="#first-steps" class="hanchor" ariaLabel="Anchor">#</a> </h1>
+<p>As is usually the case when learning a new language, the first thing I did was consult the <a href="https://www.adacore.com/documentation#all">official documentation</a>. With a reference manual and the guide from <a href="https://www.adacore.com/documentation#all">AdaCore</a> in hand, I started taking my first steps.</p>
+<h3 id="hello-worldhttpsgithubcomgonzalosilvaldeadatreehola_mundo"><a href="https://github.com/Gonzalosilvalde/ADA/tree/Hola_mundo">HELLO WORLD</a><a href="#hello-worldhttpsgithubcomgonzalosilvaldeadatreehola_mundo" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>My first impression when writing a <code>hello world</code> was that Ada had a somewhat rustic style, similar to <code>Pascal</code>, with its <code>procedures</code>, <code>begin</code>, and <code>end</code>. I also noticed an indentation format similar to Python. I didn’t find here the complexity that sometimes appears in other languages, like Java, when writing a simple program. This gave me confidence to continue.</p>
+<h3 id="functionshttpsgithubcomgonzalosilvaldeadatreefunctions"><a href="https://github.com/Gonzalosilvalde/ADA/tree/Functions">Functions</a><a href="#functionshttpsgithubcomgonzalosilvaldeadatreefunctions" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>With a bit of confidence, I decided to move quickly and dive into the topic of functions. Here, Ada also reminded me of <code>Pascal</code>, especially with the distinction between <code>procedure</code> (which returns nothing) and <code>function</code> (which does return a value). The difference is that, in Ada, the return type is placed at the end of the function, in contrast to languages like <code>C</code>, where it appears at the beginning. I implemented some simple functions for basic mathematical operations, without too many surprises in this regard.</p>
+<h3 id="recursionhttpsgithubcomgonzalosilvaldeadatreerecursion"><a href="https://github.com/Gonzalosilvalde/ADA/tree/recursion">Recursion</a><a href="#recursionhttpsgithubcomgonzalosilvaldeadatreerecursion" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Although recursion is not usually popular among programmers, I have always found something aesthetically interesting about its use, and it’s a topic I often test when learning a new language.</p>
+<p>Recursion in Ada presented no issues, until I tried calculating high numbers in the Fibonacci sequence. For small numbers, everything worked well; however, when reaching higher values, I encountered an error due to integer size limitations. Looking for a solution, I discovered the <a href="https://learn.adacore.com/courses/whats-new-in-ada-2022/chapters/big_numbers.html">Big Numbers</a> package, but when I tried compiling it, I encountered an error indicating that the package didn&rsquo;t exist. This led me to explore Alire, Ada&rsquo;s package manager, and while it didn&rsquo;t solve my problem at that moment, it was my first introduction to this tool.</p>
+<h3 id="alirehttpsalireadadev"><a href="https://alire.ada.dev/">Alire</a><a href="#alirehttpsalireadadev" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>In my <a href="https://github.com/Gonzalosilvalde/ADA/tree/main">repository</a>, there&rsquo;s a branch called &ldquo;Alire,&rdquo; though I haven&rsquo;t delved deeply into using this package manager yet. Here are my first impressions of Alire.</p>
+<p>To begin with, Alire is a package manager for Ada. If you have experience with Rust, you&rsquo;ll quickly notice that Alire is comparable to Cargo, though with some differences that make it interesting. However, the Alire community is relatively small, which is reflected in the quantity and variety of available packages. When browsing the list of crates on <a href="https://alire.ada.dev/crates.html">its website</a>, it feels like many packages are overly specific, and the lack of a large and diverse community limits the options and breadth of applications.</p>
+<p>When compared to <a href="https://crates.io/">crates.io</a> from Cargo, the difference is clear. Cargo&rsquo;s website is much more user-friendly, with an advanced search and tags that make it easier to find packages of interest without relying so much on exact names or descriptions. In Alire, the search can sometimes be less efficient, and navigation between categories isn&rsquo;t as intuitive; although, interestingly, using <code>ctrl + f</code> and tags manually can be more practical.</p>
+<p>Additionally, I&rsquo;ve experienced some inconveniences when compiling with Alire. While I appreciate the programming errors and important warnings, the style warnings can sometimes feel excessive, especially in personal projects where following a specific format isn&rsquo;t as relevant. I understand that these warnings can be useful for learning the language&rsquo;s conventions, but in my case, I prefer to focus on functionality over style. There might be a way to disable these style warnings, but I haven&rsquo;t explored it fully yet.</p>
+<p>In summary, I believe Alire has potential, but the lack of community limits the development of a broader and more robust ecosystem. With a more active community, these limitations would likely be gradually overcome.</p>
+<h3 id="semaphoreshttpsgithubcomgonzalosilvaldeadatreealire"><a href="https://github.com/Gonzalosilvalde/ADA/tree/alire">Semaphores</a><a href="#semaphoreshttpsgithubcomgonzalosilvaldeadatreealire" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>This is the previously mentioned project called Alire, although it doesn’t actually leverage this package manager. My goal in this code was to explore both concurrency and parallelism in Ada, which, from what I’ve researched, seems to be one of the language&rsquo;s strong points. Getting everything to work correctly wasn&rsquo;t easy; as I mentioned earlier, the style warnings from Alire, though useful in other contexts, didn&rsquo;t help in identifying actual functional issues. However, with persistence, I managed to build a functional simulation of a traffic system with traffic lights and vehicles. Here are some project highlights:</p>
+<ul>
+<li>I implemented tasks for the traffic lights and vehicles so that each one could monitor and coordinate with the others&rsquo; state.</li>
+<li>To ensure vehicles could cross the intersection without collisions, I used a protected type called <code>Intersection</code>. Protected types in Ada allow controlled concurrent access to shared resources, which is essential in systems where multiple processes might access the same resource.</li>
+<li>To manage state changes in the traffic light and receive vehicle requests, I used entries in the <code>TrafficLight</code> task like <code>Change_To_Green</code> and <code>Change_To_Red</code>. Using the <code>select</code> statement, I was able to make the traffic light accept these entry calls based on its current state.</li>
+</ul>
+<h3 id="motion-detectorhttpsgithubcomgonzalosilvaldeadatreemotion-detection-project"><a href="https://github.com/Gonzalosilvalde/ADA/tree/motion-detection-project">Motion Detector</a><a href="#motion-detectorhttpsgithubcomgonzalosilvaldeadatreemotion-detection-project" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>In this project, I ultimately decided to set Alire aside for another time and treat it as a future learning opportunity. The idea to implement a motion detector arose for two reasons: first, upon exploring Alire’s crates page, I noticed there wasn’t anything comparable to OpenCV; second, I remembered a previous project where I integrated C code into Rust using <code>Cargo</code>. While this introduced unsafe code somewhat contrary to Rust&rsquo;s philosophy, it was a good opportunity to experiment. This time, I wanted to try something new and explore Ada&rsquo;s possibilities in combination with <code>OpenCV</code>.</p>
+<p>My approach was to identify which OpenCV functions were necessary to implement a motion detector in C++ and then develop a wrapper that could integrate with Ada. This wrapper manages the creation of the detector, frame capture, and motion processing operations. Through <code>pragma Import</code>, I exposed the C++ wrapper functions to Ada, allowing me to work with these OpenCV functionalities directly from Ada code. This experience helped me understand how to handle interoperability between Ada and C++, especially in more complex projects.</p>
+<p>During development, learning to coordinate concurrent tasks was also key. The <code>Save_Motion</code> task runs in parallel, saving frames with detected motion without interfering with real-time capture. Ada facilitated this structure through the use of tasks, and I learned a lot about managing real-time systems. Synchronizing shared resources was another challenge that Ada helped simplify, especially in coordinating safe access to OpenCV resources.</p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2024 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
