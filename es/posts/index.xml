@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Gonzalo Silvalde</title>
-    <link>https://Gonzalosilvalde.github.io/es/posts/</link>
+    <link>https://Gonzalosilvalde.github.io/BLOG/es/posts/</link>
     <description>Recent content in Posts on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es</language>
-    <lastBuildDate>Thu, 07 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://Gonzalosilvalde.github.io/es/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://Gonzalosilvalde.github.io/BLOG/es/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Primeros pasos en ADA</title>
-      <link>https://Gonzalosilvalde.github.io/es/posts/ada-introduction/</link>
+      <link>https://Gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://Gonzalosilvalde.github.io/es/posts/ada-introduction/</guid>
+      <guid>https://Gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</guid>
       <description>Un acercamiento práctico a Ada, un lenguaje poco común pero poderoso, ideal para sistemas de alta seguridad. Desde conceptos básicos hasta desafíos avanzados, descubre cómo empecé a experimentar con sus funciones y herramientas.</description>
       <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introducción&#34;&gt;Introducción&lt;/h1&gt;

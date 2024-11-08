@@ -2,107 +2,107 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://Gonzalosilvalde.github.io/es/about/</loc>
+    <loc>https://Gonzalosilvalde.github.io/BLOG/es/about/</loc>
     <lastmod>2024-11-07T23:07:20+01:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/about/"
+                href="https://Gonzalosilvalde.github.io/BLOG/en/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/about/"
+                href="https://Gonzalosilvalde.github.io/BLOG/es/about/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/es/</loc>
+    <loc>https://Gonzalosilvalde.github.io/BLOG/es/</loc>
     <lastmod>2024-11-07T23:07:20+01:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/"
+                href="https://Gonzalosilvalde.github.io/BLOG/en/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/"
+                href="https://Gonzalosilvalde.github.io/BLOG/es/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/es/tags/ada-lang/</loc>
+    <loc>https://Gonzalosilvalde.github.io/BLOG/es/tags/ada-lang/</loc>
     <lastmod>2024-11-07T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/tags/ada-lang/"
+                href="https://Gonzalosilvalde.github.io/BLOG/en/tags/ada-lang/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/tags/ada-lang/"
+                href="https://Gonzalosilvalde.github.io/BLOG/es/tags/ada-lang/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/es/posts/</loc>
+    <loc>https://Gonzalosilvalde.github.io/BLOG/es/posts/</loc>
     <lastmod>2024-11-07T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/posts/"
+                href="https://Gonzalosilvalde.github.io/BLOG/en/posts/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/posts/"
+                href="https://Gonzalosilvalde.github.io/BLOG/es/posts/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/es/posts/ada-introduction/</loc>
+    <loc>https://Gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</loc>
     <lastmod>2024-11-07T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/posts/ada-introduction/"
+                href="https://Gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/posts/ada-introduction/"
+                href="https://Gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/es/tags/programming/</loc>
+    <loc>https://Gonzalosilvalde.github.io/BLOG/es/tags/programming/</loc>
     <lastmod>2024-11-07T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/tags/programming/"
+                href="https://Gonzalosilvalde.github.io/BLOG/en/tags/programming/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/tags/programming/"
+                href="https://Gonzalosilvalde.github.io/BLOG/es/tags/programming/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/es/tags/</loc>
+    <loc>https://Gonzalosilvalde.github.io/BLOG/es/tags/</loc>
     <lastmod>2024-11-07T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/tags/"
+                href="https://Gonzalosilvalde.github.io/BLOG/en/tags/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/tags/"
+                href="https://Gonzalosilvalde.github.io/BLOG/es/tags/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/es/categories/</loc>
+    <loc>https://Gonzalosilvalde.github.io/BLOG/es/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/categories/"
+                href="https://Gonzalosilvalde.github.io/BLOG/en/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/categories/"
+                href="https://Gonzalosilvalde.github.io/BLOG/es/categories/"
                 />
   </url>
 </urlset>

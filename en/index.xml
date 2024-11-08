@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gonzalo Silvalde</title>
-    <link>https://Gonzalosilvalde.github.io/en/</link>
+    <link>https://Gonzalosilvalde.github.io/BLOG/en/</link>
     <description>Recent content on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 07 Nov 2024 23:07:25 +0100</lastBuildDate><atom:link href="https://Gonzalosilvalde.github.io/en/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Nov 2024 23:07:25 +0100</lastBuildDate><atom:link href="https://Gonzalosilvalde.github.io/BLOG/en/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About</title>
-      <link>https://Gonzalosilvalde.github.io/en/about/</link>
+      <link>https://Gonzalosilvalde.github.io/BLOG/en/about/</link>
       <pubDate>Thu, 07 Nov 2024 23:07:25 +0100</pubDate>
       
-      <guid>https://Gonzalosilvalde.github.io/en/about/</guid>
+      <guid>https://Gonzalosilvalde.github.io/BLOG/en/about/</guid>
       <description>&lt;p&gt;Hi! I’m Gonzalo Silvalde Blanco, a Computer Engineering student specializing in Computing at the University of A Coruña. I’m passionate about technology and constantly seeking new challenges, which has helped me develop strong skills in programming, algorithm design, and data analysis.&lt;/p&gt;
 &lt;p&gt;I thrive in team environments, often taking on leadership roles, and I enjoy tackling complex problems with determination. Currently, I’m contributing to the Linux kernel, where I’ve had the privilege to make a meaningful contribution—an experience that has been incredibly rewarding.&lt;/p&gt;</description>
       <content>&lt;p&gt;Hi! I’m Gonzalo Silvalde Blanco, a Computer Engineering student specializing in Computing at the University of A Coruña. I’m passionate about technology and constantly seeking new challenges, which has helped me develop strong skills in programming, algorithm design, and data analysis.&lt;/p&gt;
@@ -30,10 +30,10 @@
     
     <item>
       <title>Getting Started with ADA</title>
-      <link>https://Gonzalosilvalde.github.io/en/posts/ada-introduction/</link>
+      <link>https://Gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://Gonzalosilvalde.github.io/en/posts/ada-introduction/</guid>
+      <guid>https://Gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</guid>
       <description>A practical approach to Ada, an uncommon yet powerful language, ideal for high-security systems. From basic concepts to advanced challenges, discover how I began experimenting with its functions and tools.</description>
       <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
