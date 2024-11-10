@@ -29,25 +29,13 @@
     </item>
     
     <item>
-      <title></title>
+      <title>Primeros pasos en ADA</title>
       <link>https://gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
       <guid>https://gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</guid>
-      <description>&lt;h2 id=&#34;summary-un-acercamiento-práctico-a-ada-un-lenguaje-poco-común-pero-poderoso-ideal-para-sistemas-de-alta-seguridad-desde-conceptos-básicos-hasta-desafíos-avanzados-descubre-cómo-empecé-a-experimentar-con-sus-funciones-y-herramientas&#34;&gt;title: &amp;ldquo;Primeros pasos en ADA&amp;rdquo;
-date: 2024-11-07
-draft: false
-tags: [&amp;ldquo;programming&amp;rdquo;, &amp;ldquo;ada-lang&amp;rdquo;]
-summary: Un acercamiento práctico a Ada, un lenguaje poco común pero poderoso, ideal para sistemas de alta seguridad. Desde conceptos básicos hasta desafíos avanzados, descubre cómo empecé a experimentar con sus funciones y herramientas.&lt;/h2&gt;
-&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
-&lt;h1 id=&#34;introducción&#34;&gt;Introducción&lt;/h1&gt;
-&lt;p&gt;Hace unas semanas, un compañero me mencionó Ada, un lenguaje que conocía vagamente por su rapidez y sus aplicaciones en la industria aeroespacial, especialmente en el desarrollo de aviones. Con este mínimo conocimiento, me adentré en el mundo de Ada.&lt;/p&gt;</description>
-      <content>&lt;h2 id=&#34;summary-un-acercamiento-práctico-a-ada-un-lenguaje-poco-común-pero-poderoso-ideal-para-sistemas-de-alta-seguridad-desde-conceptos-básicos-hasta-desafíos-avanzados-descubre-cómo-empecé-a-experimentar-con-sus-funciones-y-herramientas&#34;&gt;title: &amp;ldquo;Primeros pasos en ADA&amp;rdquo;
-date: 2024-11-07
-draft: false
-tags: [&amp;ldquo;programming&amp;rdquo;, &amp;ldquo;ada-lang&amp;rdquo;]
-summary: Un acercamiento práctico a Ada, un lenguaje poco común pero poderoso, ideal para sistemas de alta seguridad. Desde conceptos básicos hasta desafíos avanzados, descubre cómo empecé a experimentar con sus funciones y herramientas.&lt;/h2&gt;
-&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
+      <description>Un acercamiento práctico a Ada, un lenguaje poco común pero poderoso, ideal para sistemas de alta seguridad. Desde conceptos básicos hasta desafíos avanzados, descubre cómo empecé a experimentar con sus funciones y herramientas.</description>
+      <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introducción&#34;&gt;Introducción&lt;/h1&gt;
 &lt;p&gt;Hace unas semanas, un compañero me mencionó Ada, un lenguaje que conocía vagamente por su rapidez y sus aplicaciones en la industria aeroespacial, especialmente en el desarrollo de aviones. Con este mínimo conocimiento, me adentré en el mundo de Ada.&lt;/p&gt;
 &lt;p&gt;Mi curiosidad creció al notar la escasez de recursos informales para aprender el lenguaje, como videos o tutoriales básicos. Encontré listas de reproducción en YouTube incompletas y blogs que solo llegaban a cubrir temas básicos como bucles. Sorprendentemente, ni siquiera encontré cursos en plataformas populares como Udemy o Coursera. Esto podría desanimar a cualquiera, pero en mi caso, me lo tomé como un reto y decidí explorar este lenguaje tan poco mainstream.&lt;/p&gt;
