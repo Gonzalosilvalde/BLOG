@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gonzalo Silvalde</title>
-    <link>https://gonzalosilvalde.github.io/BLOG/es/</link>
+    <link>http://localhost:1313/BLOG/es/</link>
     <description>Recent content on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es</language>
-    <lastBuildDate>Thu, 07 Nov 2024 23:07:20 +0100</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/es/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/BLOG/es/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/es/about/</link>
+      <link>http://localhost:1313/BLOG/es/about/</link>
       <pubDate>Thu, 07 Nov 2024 23:07:20 +0100</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/es/about/</guid>
+      <guid>http://localhost:1313/BLOG/es/about/</guid>
       <description>&lt;p&gt;¡Hola! Soy Gonzalo Silvalde Blanco, estudiante de Ingeniería Informática especializado en Computación en la Universidade da Coruña. Apasionado por la tecnología y siempre en busca de nuevos desafíos, he desarrollado habilidades sólidas en programación, diseño de algoritmos y análisis de datos.&lt;/p&gt;
 &lt;p&gt;Me gusta colaborar en equipo, asumir roles de liderazgo y enfrentar problemas complejos con determinación. Actualmente, además de mi carrera, estoy contribuyendo al desarrollo del kernel de Linux, donde he tenido la oportunidad de realizar una contribución significativa, lo cual me llena de orgullo.&lt;/p&gt;</description>
       <content>&lt;p&gt;¡Hola! Soy Gonzalo Silvalde Blanco, estudiante de Ingeniería Informática especializado en Computación en la Universidade da Coruña. Apasionado por la tecnología y siempre en busca de nuevos desafíos, he desarrollado habilidades sólidas en programación, diseño de algoritmos y análisis de datos.&lt;/p&gt;
@@ -30,10 +30,10 @@
     
     <item>
       <title>Primeros pasos en ADA</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</link>
+      <link>http://localhost:1313/BLOG/es/posts/ada-introduction/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</guid>
+      <guid>http://localhost:1313/BLOG/es/posts/ada-introduction/</guid>
       <description>Un acercamiento práctico a Ada, un lenguaje poco común pero poderoso, ideal para sistemas de alta seguridad. Desde conceptos básicos hasta desafíos avanzados, descubre cómo empecé a experimentar con sus funciones y herramientas.</description>
       <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introducción&#34;&gt;Introducción&lt;/h1&gt;
