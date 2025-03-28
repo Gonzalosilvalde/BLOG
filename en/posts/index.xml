@@ -2,17 +2,385 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Gonzalo Silvalde</title>
-    <link>https://gonzalosilvalde.github.io/BLOG/en/posts/</link>
+    <link>http://localhost:1313/BLOG/en/posts/</link>
     <description>Recent content in Posts on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/en/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/BLOG/en/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FALSE SHARING</title>
+      <link>http://localhost:1313/BLOG/en/posts/false-sharing/</link>
+      <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/BLOG/en/posts/false-sharing/</guid>
+      <description>The article explores the performance issue known as False Sharing, which affects concurrent programs due to shared access to cache lines in modern processors. It details its impact, explains how to identify it, and presents various strategies in C to mitigate it, including data alignment and padding. The results show how small adjustments in data organization can significantly improve performance, highlighting the importance of optimizing concurrent applications to maximize hardware efficiency.</description>
+      <content>&lt;p&gt;Recently, I decided to analyze the speed of some of my C projects to identify areas for improvement. During this process, I came across a concept that caught my attention: &lt;strong&gt;False Sharing&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;False Sharing is a performance issue that can affect concurrent programs. It occurs when multiple threads access and modify different variables that, coincidentally, share the same cache line. This phenomenon leads to frequent cache invalidations, slowing down the program even if the variables are not logically related.&lt;/p&gt;
+&lt;h2 id=&#34;technical-context&#34;&gt;Technical Context&lt;/h2&gt;
+&lt;p&gt;To better understand this issue, it is useful to consider how modern processors handle memory:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Cache hierarchy&lt;/strong&gt;: Processors have cache levels (L1, L2, L3) that minimize latency when accessing memory.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cache lines&lt;/strong&gt;: Main memory is organized into blocks called cache lines, typically 64 bytes in size (though this can vary by architecture).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Access and coherence&lt;/strong&gt;: When a thread accesses a variable, the cache line containing it is loaded into the CPU&amp;rsquo;s cache. If another thread modifies a different variable within the same cache line, the entire line is invalidated in other caches. This forces it to be reloaded from main memory or the modifying cache, negatively impacting performance.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;pthread.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;time.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define iterations 1000
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; point{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}point;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;pthread_mutex_t&lt;/span&gt; mutex_x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PTHREAD_MUTEX_INITIALIZER;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;pthread_mutex_t&lt;/span&gt; mutex_y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PTHREAD_MUTEX_INITIALIZER;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sum_x&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;arg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        point.x&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sum_y&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;arg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        point.y&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;pthread_t&lt;/span&gt; thread1, thread2;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; iter &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; iter &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; iterations; iter&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        point.x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        point.y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_create&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;thread1, NULL, sum_x, NULL);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_create&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;thread2, NULL, sum_y, NULL);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_join&lt;/span&gt;(thread1, NULL);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_join&lt;/span&gt;(thread2, NULL);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_mutex_destroy&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;mutex_x);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_mutex_destroy&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;mutex_y);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;Thread 1 updates &lt;code&gt;point.x&lt;/code&gt; while thread 2 updates &lt;code&gt;point.y&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Even though &lt;code&gt;point.x&lt;/code&gt; and &lt;code&gt;point.y&lt;/code&gt; are independent variables, they share the same cache line.&lt;/li&gt;
+&lt;li&gt;Every time one thread modifies its variable, the cache line is invalidated in the other thread&amp;rsquo;s cache, forcing costly synchronization operations between caches.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This has three main effects:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Performance degradation&lt;/strong&gt;: Latency increases due to frequent cache invalidations.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Higher memory bus usage&lt;/strong&gt;: Communication between processor cores increases.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Scaling difficulty&lt;/strong&gt;: The problem can worsen as more threads are added.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;how-to-mitigate-this-effect&#34;&gt;How to Mitigate This Effect?&lt;/h2&gt;
+&lt;p&gt;There are multiple ways to mitigate &lt;strong&gt;False Sharing&lt;/strong&gt; in C for this specific case. Here are three options and their performance results for different optimizations:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Align variables to 64 bytes&lt;/strong&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; point {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y &lt;span style=&#34;color:#a6e22e&#34;&gt;__attribute__&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;aligned&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}point;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This solution separates variables into different cache lines, eliminating False Sharing. It is memory-efficient and significantly improves performance.&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;strong&gt;Align the entire struct&lt;/strong&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; point {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;} &lt;span style=&#34;color:#a6e22e&#34;&gt;__attribute__&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;aligned&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;))) point;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Aligns the struct to 64 bytes. While it improves overall access, it does not eliminate False Sharing between &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;strong&gt;Add explicit padding&lt;/strong&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; point {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; padding[&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}point;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Physically separates &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; in memory. While it eliminates False Sharing, it increases memory usage and can negatively impact performance.&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;&lt;strong&gt;Use independent global variables&lt;/strong&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Avoids False Sharing but may not always be practical.&lt;/p&gt;
+&lt;h2 id=&#34;performance-analysis&#34;&gt;Performance Analysis&lt;/h2&gt;
+&lt;p&gt;Using &lt;code&gt;perf&lt;/code&gt;, I analyzed the impact of each solution:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;perf record -o perf_program1.data ./program  
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;perf report -i perf_program1.data  
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;base-case&#34;&gt;Base Case&lt;/h3&gt;
+&lt;p&gt;The &lt;code&gt;perf&lt;/code&gt; report looks like this:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;8,72%  prueba1  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+7,75%  prueba1  [kernel.kallsyms]     [k] memset&lt;br&gt;
+5,79%  prueba1  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+3,25%  prueba1  [kernel.kallsyms]     [k] clear_page_rep&lt;br&gt;
+2,78%  prueba1  [kernel.kallsyms]     [k] unmap_page_range&lt;br&gt;
+2,46%  prueba1  [kernel.kallsyms]     [k] native_queued_spin_lock_slowpath&lt;br&gt;
+2,11%  prueba1  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id=&#34;case-with-y-alignment&#34;&gt;Case with &lt;code&gt;y&lt;/code&gt; Alignment&lt;/h3&gt;
+&lt;p&gt;Aligning &lt;code&gt;y&lt;/code&gt; to 64 bytes eliminates False Sharing:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;19,27%  prueba2  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+19,15%  prueba2  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+10,31%  prueba2  [kernel.kallsyms]     [k] memset&lt;br&gt;
+9,63%  prueba2  [kernel.kallsyms]     [k] clear_page_rep&lt;br&gt;
+5,38%  prueba2  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+1,98%  prueba2  [kernel.kallsyms]     [k] __list_del_entry_valid&lt;br&gt;
+1,29%  prueba2  [kernel.kallsyms]     [k] copy_process&lt;br&gt;
+1,20%  prueba2  [kernel.kallsyms]     [k] __memcg_kmem_charge_page&lt;br&gt;
+1,20%  prueba2  [kernel.kallsyms]     [k] alloc_vmap_area&lt;br&gt;
+1,06%  prueba2  [kernel.kallsyms]     [k] memcpy&lt;br&gt;
+0,85%  prueba2  prueba2               [.] sum_x&lt;br&gt;
+0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Explicit synchronization dominates resource usage, eliminating bottlenecks in the cache.&lt;/p&gt;
+&lt;h3 id=&#34;case-with-struct-alignment&#34;&gt;Case with Struct Alignment&lt;/h3&gt;
+&lt;p&gt;Aligning the entire struct does not eliminate False Sharing between &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;, as they remain in the same cache line:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;19,74%  prueba4  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+19,24%  prueba4  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+5,86%  prueba4  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+5,85%  prueba4  [kernel.kallsyms]     [k] memset&lt;br&gt;
+2,59%  prueba4  [kernel.kallsyms]     [k] clear_page_rep&lt;br&gt;
+2,05%  prueba4  [kernel.kallsyms]     [k] unmap_page_range&lt;br&gt;
+1,31%  prueba4  [kernel.kallsyms]     [k] psi_group_change&lt;br&gt;
+1,26%  prueba4  [kernel.kallsyms]     [k] memcpy&lt;br&gt;
+0,95%  prueba4  [kernel.kallsyms]     [k] copy_process&lt;br&gt;
+0,86%  prueba4  [kernel.kallsyms]     [k] native_read_msr&lt;br&gt;
+0,84%  prueba4  [kernel.kallsyms]     [k] memcg_slab_post_alloc_hook&lt;br&gt;
+0,84%  prueba4  prueba4               [.] sum_x&lt;br&gt;
+0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Although it slightly improves overall performance by optimizing global access to the struct, false sharing persists, limiting the gains.&lt;/p&gt;
+&lt;h3 id=&#34;case-with-explicit-padding&#34;&gt;Case with Explicit Padding&lt;/h3&gt;
+&lt;p&gt;Adding explicit padding eliminates False Sharing but introduces additional costs due to the increased struct size:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;22,11%  prueba5  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+21,95%  prueba5  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+7,58%  prueba5  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+5,12%  prueba5  [kernel.kallsyms]     [k] memset&lt;br&gt;
+2,57%  prueba5  [kernel.kallsyms]     [k] clear_page_rep&lt;br&gt;
+1,50%  prueba5  [kernel.kallsyms]     [k] copy_process&lt;br&gt;
+1,40%  prueba5  [kernel.kallsyms]     [k] psi_group_change&lt;br&gt;
+1,05%  prueba5  [kernel.kallsyms]     [k] native_read_msr&lt;br&gt;
+0,89%  prueba5  prueba5               [.] sum_x&lt;br&gt;
+0,81%  prueba5  [kernel.kallsyms]     [k] retbleed_return_thunk&lt;br&gt;
+0,76%  prueba5  [kernel.kallsyms]     [k] ___slab_alloc&lt;br&gt;
+0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;The increased memory usage reduces cache data density, penalizing prefetching and limiting improvements.&lt;/p&gt;
+&lt;h3 id=&#34;case-with-independent-variables&#34;&gt;Case with Independent Variables&lt;/h3&gt;
+&lt;p&gt;Using independent global variables eliminates False Sharing, but performance does not improve significantly:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;32,54%  prueba6  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+21,81%  prueba6  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+6,89%  prueba6  [kernel.kallsyms]     [k] memset&lt;br&gt;
+5,90%  prueba6  prueba6               [.] sum_y&lt;br&gt;
+4,81%  prueba6  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+1,00%  prueba6  [kernel.kallsyms]     [k] _raw_spin_lock&lt;br&gt;
+0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;This is due to the overhead of explicit synchronization and the latency of accessing global memory.&lt;/p&gt;
+&lt;h3 id=&#34;conclusion-of-perf&#34;&gt;Conclusion of &lt;code&gt;perf&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;The analysis of the results obtained with &lt;code&gt;perf&lt;/code&gt; and the measured times for the different configurations reveals how alignment strategies and data design impact performance, explaining the effect in each case.&lt;/p&gt;
+&lt;p&gt;In the base case, the variables &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; are in the same struct without any specific alignment. This causes them to share the same cache line, leading to false sharing when threads concurrently access these variables. The &lt;code&gt;perf&lt;/code&gt; report shows significant usage of functions related to synchronization, such as &lt;code&gt;native_queued_spin_lock_slowpath&lt;/code&gt; and &lt;code&gt;memset&lt;/code&gt;, indicating that threads are constantly invalidating cache lines. This behavior explains the relatively high execution time (123.93 seconds), as false sharing introduces significant overhead.&lt;/p&gt;
+&lt;p&gt;When the variable &lt;code&gt;y&lt;/code&gt; is aligned to 64 bytes, false sharing is eliminated because &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; occupy different cache lines. This results in a significant improvement in execution time (83.21 seconds). The &lt;code&gt;perf&lt;/code&gt; report shows that functions like &lt;code&gt;native_queued_spin_lock_slowpath&lt;/code&gt; disappear, while &lt;code&gt;pthread_mutex_lock&lt;/code&gt; and &lt;code&gt;pthread_mutex_unlock&lt;/code&gt; dominate the cycle consumption, reflecting that explicit synchronization is now the main cost. This configuration turns out to be the most efficient, as it eliminates the false sharing bottleneck without introducing significant overhead.&lt;/p&gt;
+&lt;p&gt;In this case, there is no evidence of false sharing in the &lt;code&gt;perf&lt;/code&gt; report, as &lt;code&gt;native_queued_spin_lock_slowpath&lt;/code&gt; and other clear indicators of cache contention do not appear. However, aligning the entire &lt;code&gt;struct&lt;/code&gt; to 64 bytes does not eliminate the false sharing between &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; because both variables remain in the same cache line. This slightly improves overall performance by optimizing access to the &lt;code&gt;struct&lt;/code&gt;, but false sharing persists, limiting the gains. Performance is slightly worse than aligning only the individual variables, likely due to the increased memory usage, which adds pressure on the cache. Furthermore, synchronization functions like &lt;code&gt;pthread_mutex_lock&lt;/code&gt; and &lt;code&gt;pthread_mutex_unlock&lt;/code&gt; are the primary bottlenecks, indicating that the problem is more related to synchronization than data organization.&lt;/p&gt;
+&lt;p&gt;When explicit padding is used to separate &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; in memory, false sharing disappears. However, this strategy introduces an additional cost due to the increased size of the struct, which reduces cache data density and complicates prefetching. This results in the worst performance observed (127.01 seconds). The &lt;code&gt;perf&lt;/code&gt; analysis confirms that, while false sharing is eliminated, the time is still dominated by synchronization functions (&lt;code&gt;pthread_mutex_lock&lt;/code&gt; and &lt;code&gt;pthread_mutex_unlock&lt;/code&gt;), limiting the improvements.&lt;/p&gt;
+&lt;p&gt;Finally, using independent global variables instead of a struct should eliminate false sharing. However, the performance achieved (124.81 seconds) is comparable to the base case. The &lt;code&gt;perf&lt;/code&gt; report indicates that the high proportion of time spent in &lt;code&gt;pthread_mutex_lock&lt;/code&gt; and &lt;code&gt;pthread_mutex_unlock&lt;/code&gt; reflects the overhead of explicit synchronization. Moreover, although cache invalidation is eliminated, global access may introduce small penalties due to memory access latency, explaining the lack of significant improvement.&lt;/p&gt;
+&lt;h3 id=&#34;results&#34;&gt;Results&lt;/h3&gt;
+&lt;p&gt;In this section, I show the speed results in seconds for the program with different ways of declaring the variables in 1,000,000 iterations and with different types of optimization.&lt;/p&gt;
+&lt;p&gt;-O0:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;configuration&lt;/th&gt;
+          &lt;th&gt;nº iterations&lt;/th&gt;
+          &lt;th&gt;speed (s)&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Base case&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;123.933620&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;83.217787&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Align complete struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;99.541299&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;127.010401&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Variables outside the struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;124.819451&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;-O1:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;configuration&lt;/th&gt;
+          &lt;th&gt;nº iterations&lt;/th&gt;
+          &lt;th&gt;speed (s)&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Base case&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;120.383218&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.891089&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Align complete struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;104.526728&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.828506&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Variables outside the struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;105.029095&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;-O2:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;configuration&lt;/th&gt;
+          &lt;th&gt;nº iterations&lt;/th&gt;
+          &lt;th&gt;speed (s)&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Base case&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;120.622384&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;80.128776&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Align complete struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;103.547142&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.989479&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Variables outside the struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;103.280250&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;-O3:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;configuration&lt;/th&gt;
+          &lt;th&gt;nº iterations&lt;/th&gt;
+          &lt;th&gt;speed (s)&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Base case&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;120.887245&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.762786&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Align complete struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;103.815620&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.586391&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Variables outside the struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;101.085188&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;why-optimizations-from--o1-improve-execution-time&#34;&gt;Why optimizations from -O1 improve execution time?&lt;/h3&gt;
+&lt;p&gt;When a program is compiled with optimizations starting from &lt;code&gt;-O1&lt;/code&gt;, the compiler begins to make fundamental adjustments that significantly improve performance. At this level, redundant calculations are eliminated, instructions are reorganized to better utilize CPU resources, and memory accesses are optimized, reducing latency. These automatic changes complement manual optimizations, such as data alignment, by allowing the hardware to operate more efficiently, especially in cases where problems like false sharing have been mitigated.&lt;/p&gt;
+&lt;p&gt;At higher levels of optimization, such as &lt;code&gt;-O2&lt;/code&gt; and &lt;code&gt;-O3&lt;/code&gt;, the compiler introduces more advanced techniques, such as vectorization, aggressive branch elimination, and function inlining, which further reduce execution overhead. However, the impact on execution times stabilizes, as the main bottleneck (such as explicit synchronization in multithreaded programs) cannot always be eliminated with just code optimization. This highlights the importance of combining careful data design with the compiler&amp;rsquo;s capabilities to achieve the best possible performance.&lt;/p&gt;
+&lt;h3 id=&#34;final-reflection&#34;&gt;Final Reflection&lt;/h3&gt;
+&lt;p&gt;Performance in concurrent applications is deeply linked to how data is structured and accessed in memory. As we have seen, issues like False Sharing can arise from small oversights in data structure design but have a disproportionate impact on performance. Fortunately, with a methodical approach and tools like &lt;code&gt;perf&lt;/code&gt;, it is possible to identify these issues and address them with simple but effective optimizations.&lt;/p&gt;
+&lt;p&gt;This article reflects my current understanding of the topic and my intention to share useful knowledge. However, if there is anything that can be improved, corrected, or expanded, I would be happy to receive your feedback. Feel free to contact me via email to share your comments, experiences, or any corrections you consider necessary.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;glossary-of-terms&#34;&gt;Glossary of terms:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;False Sharing&lt;/strong&gt;: Occurs when multiple threads access different variables that share the same cache line. This causes unnecessary conflicts in the cache, degrading performance.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cache Line&lt;/strong&gt;: The smallest unit of data that the CPU cache exchanges with main memory. Its size is typically 64 bytes in most modern processors.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Data Alignment&lt;/strong&gt;: A technique that organizes data in memory so that it matches the cache line boundaries, minimizing conflicts between threads.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Padding&lt;/strong&gt;: The process of adding extra bytes between elements of a data structure to prevent them from sharing cache lines.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Compiler Optimization&lt;/strong&gt;: Automatic adjustments made by the compiler at different levels (&lt;code&gt;-O1&lt;/code&gt;, &lt;code&gt;-O2&lt;/code&gt;, &lt;code&gt;-O3&lt;/code&gt;) to improve a program&amp;rsquo;s performance without altering its functionality.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Prefetching&lt;/strong&gt;: A technique used by processors to load data into the cache before it is needed, reducing access latency.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Explicit Synchronization&lt;/strong&gt;: The use of primitives like mutexes or semaphores to coordinate access to shared resources between threads.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cache Data Density&lt;/strong&gt;: The amount of useful data that can be stored in the cache simultaneously; it affects overall performance in systems that depend on memory access speed.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
     <item>
       <title>Getting Started with ADA</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</link>
+      <link>http://localhost:1313/BLOG/en/posts/ada-introduction/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</guid>
+      <guid>http://localhost:1313/BLOG/en/posts/ada-introduction/</guid>
       <description>A practical approach to Ada, an uncommon yet powerful language, ideal for high-security systems. From basic concepts to advanced challenges, discover how I began experimenting with its functions and tools.</description>
       <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;

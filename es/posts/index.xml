@@ -2,17 +2,386 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Gonzalo Silvalde</title>
-    <link>https://gonzalosilvalde.github.io/BLOG/es/posts/</link>
+    <link>http://localhost:1313/BLOG/es/posts/</link>
     <description>Recent content in Posts on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es</language>
-    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/es/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/BLOG/es/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FALSE SHARING</title>
+      <link>http://localhost:1313/BLOG/es/posts/false-sharing/</link>
+      <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/BLOG/es/posts/false-sharing/</guid>
+      <description>El artículo explora el problema de rendimiento conocido como False Sharing, que afecta programas concurrentes debido al acceso compartido a líneas de caché en procesadores modernos. Detalla su impacto, explica cómo identificarlo y presenta diversas estrategias en C para mitigarlo, incluyendo la alineación de datos y el uso de padding. Los resultados muestran cómo pequeños ajustes en la organización de los datos pueden mejorar significativamente el rendimiento, destacando la importancia de optimizar las aplicaciones concurrentes para maximizar la eficiencia del hardware.</description>
+      <content>&lt;p&gt;Recientemente, decidí analizar la velocidad de algunos de mis proyectos en C para identificar áreas de mejora. En este proceso, me topé con un concepto que llamó mucho mi atención: el &lt;strong&gt;False Sharing&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;El False Sharing es un problema de rendimiento que puede afectar programas concurrentes. Ocurre cuando varios hilos acceden y modifican variables distintas que, por casualidad, comparten la misma línea de caché. Este fenómeno provoca invalidaciones frecuentes de la caché, lo que ralentiza el programa, incluso si las variables no están lógicamente relacionadas entre sí.&lt;/p&gt;
+&lt;h3 id=&#34;contexto-técnico&#34;&gt;Contexto Técnico&lt;/h3&gt;
+&lt;p&gt;Para entender mejor este problema, es útil considerar cómo los procesadores modernos manejan la memoria:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Jerarquía de caché&lt;/strong&gt;: Los procesadores tienen niveles de caché (L1, L2, L3) que minimizan la latencia al acceder a la memoria.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Líneas de caché&lt;/strong&gt;: La memoria principal está organizada en bloques denominados líneas de caché, que típicamente tienen 64 bytes (aunque este tamaño puede variar según la arquitectura).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Acceso y coherencia&lt;/strong&gt;: Cuando un hilo accede a una variable, la línea de caché que la contiene se carga en la caché de la CPU que ejecuta ese hilo. Si otro hilo modifica una variable diferente que se encuentra en la misma línea de caché, toda la línea se invalida en las demás cachés. Esto obliga a recargarla desde la memoria principal o desde la caché que realizó la modificación, impactando negativamente el rendimiento.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;ejemplo&#34;&gt;EJEMPLO&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;pthread.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#include&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;time.h&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#define iterations 1000
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; point{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}point;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;pthread_mutex_t&lt;/span&gt; mutex_x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PTHREAD_MUTEX_INITIALIZER;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;pthread_mutex_t&lt;/span&gt; mutex_y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; PTHREAD_MUTEX_INITIALIZER;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sum_x&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;arg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        point.x&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}    
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;sum_y&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;void&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;arg)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; i &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; i &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;; i&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        point.y&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;main&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;pthread_t&lt;/span&gt; thread1, thread2;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; iter &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; iter &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; iterations; iter&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        point.x &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        point.y &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_create&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;thread1, NULL, sum_x, NULL);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_create&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;thread2, NULL, sum_y, NULL);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_join&lt;/span&gt;(thread1, NULL);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_join&lt;/span&gt;(thread2, NULL);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    }
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_mutex_destroy&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;mutex_x);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;pthread_mutex_destroy&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&lt;/span&gt;mutex_y);
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;El hilo 1 actualiza &lt;code&gt;point.x&lt;/code&gt; mientras el hilo 2 actualiza &lt;code&gt;point.y&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Aunque &lt;code&gt;point.x&lt;/code&gt; e &lt;code&gt;point.y&lt;/code&gt; son variables independientes, comparten la misma línea de caché.&lt;/li&gt;
+&lt;li&gt;Cada vez que un hilo modifica su variable, la línea de caché se invalida en la caché del otro hilo, forzando costosas operaciones de sincronización entre las cachés.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Esto, trae 3 efectos principales&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Degradación del rendimiento&lt;/strong&gt;: Aumenta la latencia debido a las frecuentes invalidaciones de caché.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mayor uso del bus de memoria&lt;/strong&gt;: Se incrementa la comunicación entre los núcleos del procesador.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dificultad para escalar&lt;/strong&gt;: A medida que se añaden más hilos, el problema puede empeorar.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;como-mitigar-este-efecto&#34;&gt;¿Como mitigar este efecto?&lt;/h2&gt;
+&lt;p&gt;Existen múltiples formas de mitigar el efecto de &lt;strong&gt;false sharing&lt;/strong&gt; en C para este caso concreto. Aquí detallo tres opciones y sus resultados en rendimiento en diferentes optimizaciones:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Alinear las variables a 64 bytes:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; point {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y &lt;span style=&#34;color:#a6e22e&#34;&gt;__attribute__&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;aligned&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;)));
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}point;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Esta solución separa las variables en distintas líneas de caché, eliminando el false sharing. Es eficiente en memoria y mejora significativamente el rendimiento.&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;strong&gt;Alinear el struct completo:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; point {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;} &lt;span style=&#34;color:#a6e22e&#34;&gt;__attribute__&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;aligned&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;))) point;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Alinea el struct a 64 bytes. Aunque mejora el acceso general, no elimina el false sharing entre &lt;code&gt;x&lt;/code&gt; e &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;strong&gt;Agregar padding explícito:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;struct&lt;/span&gt; point {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;char&lt;/span&gt; padding[&lt;span style=&#34;color:#ae81ff&#34;&gt;64&lt;/span&gt;];
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}point;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Separa físicamente &lt;code&gt;x&lt;/code&gt; e &lt;code&gt;y&lt;/code&gt; en memoria. Aunque elimina el false sharing, incrementa el uso de memoria y puede afectar negativamente el rendimiento.&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;&lt;strong&gt;Usar variables globales independientes:&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; x;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;int&lt;/span&gt; y;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Evita el false sharing, pero no siempre es práctico.&lt;/p&gt;
+&lt;h3 id=&#34;análisis-de-rendimiento&#34;&gt;Análisis de Rendimiento&lt;/h3&gt;
+&lt;p&gt;Usando perf, analicé el impacto de cada solución:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;perf record -o perf_programa1.data ./programa&lt;br&gt;
+perf report -i perf_programa1.data&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id=&#34;caso-base&#34;&gt;Caso Base&lt;/h3&gt;
+&lt;p&gt;El reporte de &lt;code&gt;perf&lt;/code&gt; se ve así:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;8,72%  prueba1  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+7,75%  prueba1  [kernel.kallsyms]     [k] memset&lt;br&gt;
+5,79%  prueba1  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+3,25%  prueba1  [kernel.kallsyms]     [k] clear_page_rep&lt;br&gt;
+2,78%  prueba1  [kernel.kallsyms]     [k] unmap_page_range&lt;br&gt;
+2,46%  prueba1  [kernel.kallsyms]     [k] native_queued_spin_lock_slowpath&lt;br&gt;
+2,11%  prueba1  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h3 id=&#34;caso-con-alineación-y&#34;&gt;Caso con alineación &lt;code&gt;y&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;Al alinear &lt;code&gt;y&lt;/code&gt; a 64 bytes, el false sharing desaparece:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;19,27%  prueba2  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+19,15%  prueba2  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+10,31%  prueba2  [kernel.kallsyms]     [k] memset&lt;br&gt;
+9,63%  prueba2  [kernel.kallsyms]     [k] clear_page_rep&lt;br&gt;
+5,38%  prueba2  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+1,98%  prueba2  [kernel.kallsyms]     [k] __list_del_entry_valid&lt;br&gt;
+1,29%  prueba2  [kernel.kallsyms]     [k] copy_process&lt;br&gt;
+1,20%  prueba2  [kernel.kallsyms]     [k] __memcg_kmem_charge_page&lt;br&gt;
+1,20%  prueba2  [kernel.kallsyms]     [k] alloc_vmap_area&lt;br&gt;
+1,06%  prueba2  [kernel.kallsyms]     [k] memcpy&lt;br&gt;
+0,85%  prueba2  prueba2               [.] sum_x&lt;br&gt;
+0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;La sincronización explícita domina el uso de recursos, eliminando cuellos de botella en la caché.&lt;/p&gt;
+&lt;h3 id=&#34;caso-alineación-struct-completo&#34;&gt;Caso alineación struct completo&lt;/h3&gt;
+&lt;p&gt;Alinear el struct completo no elimina el false sharing entre x e y porque permanecen en la misma línea de caché:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;19,74%  prueba4  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+19,24%  prueba4  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+5,86%  prueba4  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+5,85%  prueba4  [kernel.kallsyms]     [k] memset&lt;br&gt;
+2,59%  prueba4  [kernel.kallsyms]     [k] clear_page_rep&lt;br&gt;
+2,05%  prueba4  [kernel.kallsyms]     [k] unmap_page_range&lt;br&gt;
+1,31%  prueba4  [kernel.kallsyms]     [k] psi_group_change&lt;br&gt;
+1,26%  prueba4  [kernel.kallsyms]     [k] memcpy&lt;br&gt;
+0,95%  prueba4  [kernel.kallsyms]     [k] copy_process&lt;br&gt;
+0,86%  prueba4  [kernel.kallsyms]     [k] native_read_msr&lt;br&gt;
+0,84%  prueba4  [kernel.kallsyms]     [k] memcg_slab_post_alloc_hook&lt;br&gt;
+0,84%  prueba4  prueba4               [.] sum_x&lt;br&gt;
+0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Aunque mejora ligeramente el rendimiento general al optimizar el acceso global al struct, el false sharing persiste, limitando las ganancias.&lt;/p&gt;
+&lt;h2 id=&#34;caso-con-padding-explícito&#34;&gt;Caso con Padding explícito&lt;/h2&gt;
+&lt;p&gt;Agregar padding explícito elimina el false sharing, pero introduce costos adicionales por el mayor tamaño del struct:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;22,11%  prueba5  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+21,95%  prueba5  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+7,58%  prueba5  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+5,12%  prueba5  [kernel.kallsyms]     [k] memset&lt;br&gt;
+2,57%  prueba5  [kernel.kallsyms]     [k] clear_page_rep&lt;br&gt;
+1,50%  prueba5  [kernel.kallsyms]     [k] copy_process&lt;br&gt;
+1,40%  prueba5  [kernel.kallsyms]     [k] psi_group_change&lt;br&gt;
+1,05%  prueba5  [kernel.kallsyms]     [k] native_read_msr&lt;br&gt;
+0,89%  prueba5  prueba5               [.] sum_x&lt;br&gt;
+0,81%  prueba5  [kernel.kallsyms]     [k] retbleed_return_thunk&lt;br&gt;
+0,76%  prueba5  [kernel.kallsyms]     [k] ___slab_alloc&lt;br&gt;
+0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;El aumento en el uso de memoria reduce la densidad de datos en caché, penalizando el prefetching y limitando las mejoras.&lt;/p&gt;
+&lt;h3 id=&#34;caso-con-variables-independientes&#34;&gt;Caso con Variables Independientes&lt;/h3&gt;
+&lt;p&gt;El uso de variables globales independientes elimina el false sharing, pero el rendimiento no mejora significativamente:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;32,54%  prueba6  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt&lt;br&gt;
+21,81%  prueba6  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5&lt;br&gt;
+6,89%  prueba6  [kernel.kallsyms]     [k] memset&lt;br&gt;
+5,90%  prueba6  prueba6               [.] sum_y&lt;br&gt;
+4,81%  prueba6  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
+1,00%  prueba6  [kernel.kallsyms]     [k] _raw_spin_lock&lt;br&gt;
+0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Esto se debe a la sobrecarga de sincronización explícita y a la latencia de acceso a memoria global.&lt;/p&gt;
+&lt;h3 id=&#34;conclusión-de-perf&#34;&gt;Conclusión de &lt;code&gt;perf&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;El análisis de los resultados obtenidos con &lt;code&gt;perf&lt;/code&gt; y los tiempos medidos para las diferentes configuraciones revela cómo afectan las estrategias de alineación y diseño de datos al rendimiento, explicando el impacto en cada caso.&lt;/p&gt;
+&lt;p&gt;En el caso base, las variables &lt;code&gt;x&lt;/code&gt; e &lt;code&gt;y&lt;/code&gt; están en el mismo struct sin ninguna alineación específica. Esto provoca que compartan la misma línea de caché, lo que genera false sharing cuando los hilos acceden concurrentemente a estas variables. El reporte de &lt;code&gt;perf&lt;/code&gt; muestra un uso significativo de funciones relacionadas con la sincronización, como &lt;code&gt;native_queued_spin_lock_slowpath&lt;/code&gt; y &lt;code&gt;memset&lt;/code&gt;, indicando que los hilos están invalidando constantemente las líneas de caché. Este comportamiento explica el tiempo relativamente alto de ejecución (123.93 segundos), pues el false sharing genera una gran sobrecarga.&lt;/p&gt;
+&lt;p&gt;Cuando se alinea la variable &lt;code&gt;y&lt;/code&gt; a 64 bytes, el false sharing se elimina, ya que &lt;code&gt;x&lt;/code&gt; e &lt;code&gt;y&lt;/code&gt; pasan a ocupar líneas de caché diferentes. Esto se traduce en una mejora notable en el tiempo de ejecución (83.21 segundos). El reporte de &lt;code&gt;perf&lt;/code&gt; muestra que funciones como &lt;code&gt;native_queued_spin_lock_slowpath&lt;/code&gt; desaparecen, mientras que &lt;code&gt;pthread_mutex_lock&lt;/code&gt; y &lt;code&gt;pthread_mutex_unlock&lt;/code&gt; dominan el consumo de ciclos, reflejando que la sincronización explícita es ahora el mayor costo. Esta configuración resulta ser la más eficiente, ya que elimina el cuello de botella del false sharing sin introducir una sobrecarga significativa.&lt;/p&gt;
+&lt;p&gt;En este caso, no hay evidencia de false sharing en el reporte de &lt;code&gt;perf&lt;/code&gt;, ya que no aparece &lt;code&gt;native_queued_spin_lock_slowpath&lt;/code&gt; ni otros indicadores claros de contención en la caché. Sin embargo, alinear el &lt;code&gt;struct&lt;/code&gt; completo a 64 bytes no elimina el false sharing entre &lt;code&gt;x&lt;/code&gt; e &lt;code&gt;y&lt;/code&gt;, ya que ambas variables permanecen en la misma línea de caché. Esto mejora ligeramente el rendimiento global al optimizar el acceso al &lt;code&gt;struct&lt;/code&gt;, pero el false sharing persiste, limitando las ganancias. El rendimiento es un poco peor que alinear solo las variables individuales, probablemente debido al mayor uso de memoria, lo que aumenta la presión sobre la caché. Además, las funciones de sincronización, como &lt;code&gt;pthread_mutex_lock&lt;/code&gt; y &lt;code&gt;pthread_mutex_unlock&lt;/code&gt;, son los principales cuellos de botella, indicando que el problema está más relacionado con la sincronización que con la organización de los datos.&lt;/p&gt;
+&lt;p&gt;Cuando se utiliza padding explícito para separar &lt;code&gt;x&lt;/code&gt; e &lt;code&gt;y&lt;/code&gt; en memoria, el false sharing desaparece. Sin embargo, esta estrategia introduce un costo adicional debido al aumento en el tamaño del struct, lo que reduce la densidad de datos en caché y dificulta el prefetching. Esto resulta en el peor rendimiento observado (127.01 segundos). El análisis de &lt;code&gt;perf&lt;/code&gt; confirma que, aunque el false sharing se elimina, el tiempo sigue dominado por funciones de sincronización (&lt;code&gt;pthread_mutex_lock&lt;/code&gt; y &lt;code&gt;pthread_mutex_unlock&lt;/code&gt;), lo que limita las mejoras.&lt;/p&gt;
+&lt;p&gt;Finalmente, al usar variables globales independientes en lugar de un struct, el false sharing debería desaparecer. Sin embargo, el rendimiento obtenido (124.81 segundos) es comparable al caso base. El reporte de &lt;code&gt;perf&lt;/code&gt; indica que la alta proporción de tiempo en &lt;code&gt;pthread_mutex_lock&lt;/code&gt; y &lt;code&gt;pthread_mutex_unlock&lt;/code&gt; refleja la sobrecarga de sincronización explícita. Además, aunque se elimina la invalidación de caché, el acceso global puede introducir pequeñas penalizaciones debido a la latencia de acceso a memoria, lo que explica la falta de mejora significativa.&lt;/p&gt;
+&lt;h3 id=&#34;resultados&#34;&gt;Resultados&lt;/h3&gt;
+&lt;p&gt;En este apartado muestro los resultados de la velocidad en segundos que tardo el programa con las diferentes formas de declarar las variables en 1000000 de iteraciones y con distintos tipos de optimización.&lt;/p&gt;
+&lt;p&gt;-O0:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;configuración&lt;/th&gt;
+          &lt;th&gt;nº iteraciones&lt;/th&gt;
+          &lt;th&gt;velocidad (s)&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Caso base&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;123.933620&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Alinear  &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;83.217787&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Alinear struct completo&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;99.541299&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Padding explícito ( &lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;127.010401&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Variables fuera del struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;124.819451&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;-O1:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;configuración&lt;/th&gt;
+          &lt;th&gt;nº iteraciones&lt;/th&gt;
+          &lt;th&gt;velocidad (s)&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Caso base&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;120.383218&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Alinear  &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.891089&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Alinear struct completo&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;104.526728&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Padding explícito ( &lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.828506&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Variables fuera del struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;105.029095&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;-O2:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;configuración&lt;/th&gt;
+          &lt;th&gt;nº iteraciones&lt;/th&gt;
+          &lt;th&gt;velocidad (s)&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Caso base&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;120.622384&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Alinear  &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;80.128776&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Alinear struct completo&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;103.547142&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Padding explícito ( &lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.989479&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Variables fuera del struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;103.280250&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;-O3:&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;configuración&lt;/th&gt;
+          &lt;th&gt;nº iteraciones&lt;/th&gt;
+          &lt;th&gt;velocidad (s)&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Caso base&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;120.887245&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Alinear  &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.762786&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Alinear struct completo&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;103.815620&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Padding explícito ( &lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;79.586391&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Variables fuera del struct&lt;/td&gt;
+          &lt;td&gt;1000000&lt;/td&gt;
+          &lt;td&gt;101.085188&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;por-qué-las-optimizaciones-desde--o1-mejoran-el-tiempo-de-ejecución&#34;&gt;¿Por qué las optimizaciones desde -O1 mejoran el tiempo de ejecución?&lt;/h3&gt;
+&lt;p&gt;Cuando un programa se compila con optimizaciones a partir de &lt;code&gt;-O1&lt;/code&gt;, el compilador comienza a realizar ajustes fundamentales que mejoran significativamente el rendimiento. En este nivel, se eliminan cálculos redundantes, se reorganizan las instrucciones para aprovechar mejor los recursos de la CPU y se optimizan los accesos a memoria, reduciendo la latencia. Estos cambios automáticos complementan las optimizaciones manuales, como la alineación de datos, al permitir que el hardware trabaje con mayor eficiencia, especialmente en casos donde problemas como el false sharing han sido mitigados.&lt;/p&gt;
+&lt;p&gt;A niveles más altos de optimización, como &lt;code&gt;-O2&lt;/code&gt; y &lt;code&gt;-O3&lt;/code&gt;, el compilador introduce técnicas más avanzadas, como la vectorización, la eliminación agresiva de ramas y el inlining de funciones, que reducen aún más la sobrecarga asociada a la ejecución. Sin embargo, el impacto en tiempos de ejecución se estabiliza, ya que el cuello de botella principal (como la sincronización explícita en programas multihilo) no siempre puede eliminarse solo con optimización del código. Esto destaca la importancia de combinar un diseño cuidadoso de datos con las capacidades del compilador para lograr el mejor rendimiento posible.&lt;/p&gt;
+&lt;h3 id=&#34;reflexión-final&#34;&gt;Reflexión Final&lt;/h3&gt;
+&lt;p&gt;El rendimiento en aplicaciones concurrentes está profundamente ligado a la forma en que los datos se estructuran y acceden en memoria. Como hemos visto, problemas como el False Sharing pueden surgir de pequeños descuidos en el diseño de estructuras de datos, pero tienen un impacto desproporcionado en el desempeño. Afortunadamente, con un enfoque metódico y herramientas como &lt;code&gt;perf&lt;/code&gt;, es posible identificar estos problemas y abordarlos con optimizaciones simples pero efectivas.&lt;/p&gt;
+&lt;p&gt;Este artículo refleja mi entendimiento actual sobre el tema y mi intención de compartir conocimientos útiles. Sin embargo, si hay algo que pueda mejorarse, corregirse o ampliarse, estaré encantado de recibir tu retroalimentación. No dudes en contactarme por correo para compartir tus comentarios, experiencias o cualquier corrección que consideres necesaria.&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;sumario-de-términos&#34;&gt;Sumario de términos:&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;False Sharing&lt;/strong&gt;: Ocurre cuando múltiples hilos acceden a variables diferentes que comparten la misma línea de caché. Esto genera conflictos innecesarios en la memoria caché, degradando el rendimiento.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Línea de caché&lt;/strong&gt;: Unidad mínima de datos que la caché de la CPU intercambia con la memoria principal. Su tamaño suele ser de 64 bytes en la mayoría de los procesadores modernos.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Alineación de datos&lt;/strong&gt;: Técnica que organiza los datos en memoria de manera que coincidan con los límites de línea de caché, minimizando conflictos entre hilos.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Padding&lt;/strong&gt;: Proceso de agregar bytes adicionales entre elementos de una estructura de datos para evitar que compartan líneas de caché.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Optimización del compilador&lt;/strong&gt;: Ajustes automáticos realizados por el compilador en diferentes niveles (&lt;code&gt;-O1&lt;/code&gt;, &lt;code&gt;-O2&lt;/code&gt;, &lt;code&gt;-O3&lt;/code&gt;) para mejorar el rendimiento de un programa sin alterar su funcionalidad.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Prefetching&lt;/strong&gt;: Técnica usada por los procesadores para cargar datos en caché antes de que sean necesarios, reduciendo la latencia de acceso.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sincronización explícita&lt;/strong&gt;: Uso de primitivas como mutex o semáforos para coordinar el acceso a recursos compartidos entre hilos.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Densidad de datos en caché&lt;/strong&gt;: Cantidad de datos útiles que pueden ser almacenados en la caché simultáneamente; afecta el rendimiento general en sistemas que dependen de la velocidad de acceso a la memoria.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
     <item>
       <title>Primeros pasos en ADA</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</link>
+      <link>http://localhost:1313/BLOG/es/posts/ada-introduction/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/es/posts/ada-introduction/</guid>
+      <guid>http://localhost:1313/BLOG/es/posts/ada-introduction/</guid>
       <description>Un acercamiento práctico a Ada, un lenguaje poco común pero poderoso, ideal para sistemas de alta seguridad. Desde conceptos básicos hasta desafíos avanzados, descubre cómo empecé a experimentar con sus funciones y herramientas.</description>
       <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introducción&#34;&gt;Introducción&lt;/h1&gt;

@@ -86,7 +86,7 @@
 <meta property="og:image:height" content="627">
 
 
-  <meta property="article:published_time" content="2025-01-12 00:00:00 &#43;0000 UTC" />
+  <meta property="article:published_time" content="2025-01-13 00:00:00 &#43;0000 UTC" />
 
 
 
@@ -189,7 +189,7 @@
   <h1 class="post-title">
     <a href="http://localhost:1313/BLOG/en/posts/false-sharing/">FALSE SHARING</a>
   </h1>
-  <div class="post-meta"><time class="post-date">2025-01-12</time></div>
+  <div class="post-meta"><time class="post-date">2025-01-13</time></div>
 
   
     <span class="post-tags">
@@ -334,8 +334,7 @@
 2,78%  prueba1  [kernel.kallsyms]     [k] unmap_page_range<br>
 2,46%  prueba1  [kernel.kallsyms]     [k] native_queued_spin_lock_slowpath<br>
 2,11%  prueba1  [kernel.kallsyms]     [k] native_write_msr<br>
-1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p>
-</blockquote>
+1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p></blockquote>
 <h3 id="case-with-y-alignment">Case with <code>y</code> Alignment<a href="#case-with-y-alignment" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Aligning <code>y</code> to 64 bytes eliminates False Sharing:</p>
 <blockquote>
@@ -350,8 +349,7 @@
 1,20%  prueba2  [kernel.kallsyms]     [k] alloc_vmap_area<br>
 1,06%  prueba2  [kernel.kallsyms]     [k] memcpy<br>
 0,85%  prueba2  prueba2               [.] sum_x<br>
-0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p>
-</blockquote>
+0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p></blockquote>
 <p>Explicit synchronization dominates resource usage, eliminating bottlenecks in the cache.</p>
 <h3 id="case-with-struct-alignment">Case with Struct Alignment<a href="#case-with-struct-alignment" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Aligning the entire struct does not eliminate False Sharing between <code>x</code> and <code>y</code>, as they remain in the same cache line:</p>
@@ -368,8 +366,7 @@
 0,86%  prueba4  [kernel.kallsyms]     [k] native_read_msr<br>
 0,84%  prueba4  [kernel.kallsyms]     [k] memcg_slab_post_alloc_hook<br>
 0,84%  prueba4  prueba4               [.] sum_x<br>
-0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p>
-</blockquote>
+0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p></blockquote>
 <p>Although it slightly improves overall performance by optimizing global access to the struct, false sharing persists, limiting the gains.</p>
 <h3 id="case-with-explicit-padding">Case with Explicit Padding<a href="#case-with-explicit-padding" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Adding explicit padding eliminates False Sharing but introduces additional costs due to the increased struct size:</p>
@@ -385,8 +382,7 @@
 0,89%  prueba5  prueba5               [.] sum_x<br>
 0,81%  prueba5  [kernel.kallsyms]     [k] retbleed_return_thunk<br>
 0,76%  prueba5  [kernel.kallsyms]     [k] ___slab_alloc<br>
-0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p>
-</blockquote>
+0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p></blockquote>
 <p>The increased memory usage reduces cache data density, penalizing prefetching and limiting improvements.</p>
 <h3 id="case-with-independent-variables">Case with Independent Variables<a href="#case-with-independent-variables" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Using independent global variables eliminates False Sharing, but performance does not improve significantly:</p>
@@ -397,8 +393,7 @@
 5,90%  prueba6  prueba6               [.] sum_y<br>
 4,81%  prueba6  [kernel.kallsyms]     [k] native_write_msr<br>
 1,00%  prueba6  [kernel.kallsyms]     [k] _raw_spin_lock<br>
-0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p>
-</blockquote>
+0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p></blockquote>
 <p>This is due to the overhead of explicit synchronization and the latency of accessing global memory.</p>
 <h3 id="conclusion-of-perf">Conclusion of <code>perf</code><a href="#conclusion-of-perf" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>The analysis of the results obtained with <code>perf</code> and the measured times for the different configurations reveals how alignment strategies and data design impact performance, explaining the effect in each case.</p>

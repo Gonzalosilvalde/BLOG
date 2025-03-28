@@ -86,7 +86,7 @@
 <meta property="og:image:height" content="627">
 
 
-  <meta property="article:published_time" content="2025-01-12 00:00:00 &#43;0000 UTC" />
+  <meta property="article:published_time" content="2025-01-13 00:00:00 &#43;0000 UTC" />
 
 
 
@@ -189,7 +189,7 @@
   <h1 class="post-title">
     <a href="http://localhost:1313/BLOG/es/posts/false-sharing/">FALSE SHARING</a>
   </h1>
-  <div class="post-meta"><time class="post-date">2025-01-12</time></div>
+  <div class="post-meta"><time class="post-date">2025-01-13</time></div>
 
   
     <span class="post-tags">
@@ -324,8 +324,7 @@
 <p>Usando perf, analicé el impacto de cada solución:</p>
 <blockquote>
 <p>perf record -o perf_programa1.data ./programa<br>
-perf report -i perf_programa1.data</p>
-</blockquote>
+perf report -i perf_programa1.data</p></blockquote>
 <h3 id="caso-base">Caso Base<a href="#caso-base" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>El reporte de <code>perf</code> se ve así:</p>
 <blockquote>
@@ -336,8 +335,7 @@ perf report -i perf_programa1.data</p>
 2,78%  prueba1  [kernel.kallsyms]     [k] unmap_page_range<br>
 2,46%  prueba1  [kernel.kallsyms]     [k] native_queued_spin_lock_slowpath<br>
 2,11%  prueba1  [kernel.kallsyms]     [k] native_write_msr<br>
-1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p>
-</blockquote>
+1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p></blockquote>
 <h3 id="caso-con-alineación-y">Caso con alineación <code>y</code><a href="#caso-con-alineación-y" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Al alinear <code>y</code> a 64 bytes, el false sharing desaparece:</p>
 <blockquote>
@@ -352,8 +350,7 @@ perf report -i perf_programa1.data</p>
 1,20%  prueba2  [kernel.kallsyms]     [k] alloc_vmap_area<br>
 1,06%  prueba2  [kernel.kallsyms]     [k] memcpy<br>
 0,85%  prueba2  prueba2               [.] sum_x<br>
-0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p>
-</blockquote>
+0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p></blockquote>
 <p>La sincronización explícita domina el uso de recursos, eliminando cuellos de botella en la caché.</p>
 <h3 id="caso-alineación-struct-completo">Caso alineación struct completo<a href="#caso-alineación-struct-completo" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Alinear el struct completo no elimina el false sharing entre x e y porque permanecen en la misma línea de caché:</p>
@@ -370,8 +367,7 @@ perf report -i perf_programa1.data</p>
 0,86%  prueba4  [kernel.kallsyms]     [k] native_read_msr<br>
 0,84%  prueba4  [kernel.kallsyms]     [k] memcg_slab_post_alloc_hook<br>
 0,84%  prueba4  prueba4               [.] sum_x<br>
-0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p>
-</blockquote>
+0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p></blockquote>
 <p>Aunque mejora ligeramente el rendimiento general al optimizar el acceso global al struct, el false sharing persiste, limitando las ganancias.</p>
 <h2 id="caso-con-padding-explícito">Caso con Padding explícito<a href="#caso-con-padding-explícito" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Agregar padding explícito elimina el false sharing, pero introduce costos adicionales por el mayor tamaño del struct:</p>
@@ -387,8 +383,7 @@ perf report -i perf_programa1.data</p>
 0,89%  prueba5  prueba5               [.] sum_x<br>
 0,81%  prueba5  [kernel.kallsyms]     [k] retbleed_return_thunk<br>
 0,76%  prueba5  [kernel.kallsyms]     [k] ___slab_alloc<br>
-0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p>
-</blockquote>
+0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p></blockquote>
 <p>El aumento en el uso de memoria reduce la densidad de datos en caché, penalizando el prefetching y limitando las mejoras.</p>
 <h3 id="caso-con-variables-independientes">Caso con Variables Independientes<a href="#caso-con-variables-independientes" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>El uso de variables globales independientes elimina el false sharing, pero el rendimiento no mejora significativamente:</p>
@@ -399,8 +394,7 @@ perf report -i perf_programa1.data</p>
 5,90%  prueba6  prueba6               [.] sum_y<br>
 4,81%  prueba6  [kernel.kallsyms]     [k] native_write_msr<br>
 1,00%  prueba6  [kernel.kallsyms]     [k] _raw_spin_lock<br>
-0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p>
-</blockquote>
+0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p></blockquote>
 <p>Esto se debe a la sobrecarga de sincronización explícita y a la latencia de acceso a memoria global.</p>
 <h3 id="conclusión-de-perf">Conclusión de <code>perf</code><a href="#conclusión-de-perf" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>El análisis de los resultados obtenidos con <code>perf</code> y los tiempos medidos para las diferentes configuraciones revela cómo afectan las estrategias de alineación y diseño de datos al rendimiento, explicando el impacto en cada caso.</p>
