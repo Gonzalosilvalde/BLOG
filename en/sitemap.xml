@@ -2,107 +2,172 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://Gonzalosilvalde.github.io/en/about/</loc>
+    <loc>http://localhost:1313/BLOG/en/tags/c/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/tags/c/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/tags/c/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/tags/cache/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/tags/cache/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/tags/cache/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/tags/concurrency/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/tags/concurrency/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/tags/concurrency/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/posts/false-sharing/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/posts/false-sharing/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/posts/false-sharing/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/tags/perf/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/tags/perf/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/tags/perf/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/posts/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/posts/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/posts/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/tags/programming/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/tags/programming/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/tags/programming/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/tags/</loc>
+    <lastmod>2025-01-13T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="es"
+                href="http://localhost:1313/BLOG/es/tags/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="http://localhost:1313/BLOG/en/tags/"
+                />
+  </url><url>
+    <loc>http://localhost:1313/BLOG/en/about/</loc>
     <lastmod>2024-11-07T23:07:25+01:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/about/"
+                href="http://localhost:1313/BLOG/es/about/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/about/"
+                href="http://localhost:1313/BLOG/en/about/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/en/</loc>
-    <lastmod>2024-11-07T23:07:25+01:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/"
-                />
-  </url><url>
-    <loc>https://Gonzalosilvalde.github.io/en/tags/ada-lang/</loc>
+    <loc>http://localhost:1313/BLOG/en/tags/ada-lang/</loc>
     <lastmod>2024-11-07T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/tags/ada-lang/"
+                href="http://localhost:1313/BLOG/es/tags/ada-lang/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/tags/ada-lang/"
+                href="http://localhost:1313/BLOG/en/tags/ada-lang/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/en/posts/ada-introduction/</loc>
+    <loc>http://localhost:1313/BLOG/en/posts/ada-introduction/</loc>
     <lastmod>2024-11-07T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/posts/ada-introduction/"
+                href="http://localhost:1313/BLOG/es/posts/ada-introduction/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/posts/ada-introduction/"
+                href="http://localhost:1313/BLOG/en/posts/ada-introduction/"
                 />
   </url><url>
-    <loc>https://Gonzalosilvalde.github.io/en/posts/</loc>
-    <lastmod>2024-11-07T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/BLOG/en/categories/</loc>
     <xhtml:link
                 rel="alternate"
                 hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/posts/"
+                href="http://localhost:1313/BLOG/es/categories/"
                 />
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/posts/"
-                />
-  </url><url>
-    <loc>https://Gonzalosilvalde.github.io/en/tags/programming/</loc>
-    <lastmod>2024-11-07T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/tags/programming/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/tags/programming/"
-                />
-  </url><url>
-    <loc>https://Gonzalosilvalde.github.io/en/tags/</loc>
-    <lastmod>2024-11-07T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/tags/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/tags/"
-                />
-  </url><url>
-    <loc>https://Gonzalosilvalde.github.io/en/categories/</loc>
-    <xhtml:link
-                rel="alternate"
-                hreflang="es"
-                href="https://Gonzalosilvalde.github.io/es/categories/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://Gonzalosilvalde.github.io/en/categories/"
+                href="http://localhost:1313/BLOG/en/categories/"
                 />
   </url>
 </urlset>

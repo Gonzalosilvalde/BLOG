@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/BLOG/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=BLOG/livereload" data-no-instant defer></script>
+  
+    <title>FALSE SHARING :: Gonzalo Silvalde</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The article explores the performance issue known as False Sharing, which affects concurrent programs due to shared access to cache lines in modern processors. It details its impact, explains how to identify it, and presents various strategies in C to mitigate it, including data alignment and padding. The results show how small adjustments in data organization can significantly improve performance, highlighting the importance of optimizing concurrent applications to maximize hardware efficiency." />
+<meta name="keywords" content="blog, hugo, terminal" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/BLOG/en/posts/false-sharing/" />
+
+
+
+
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/header.min.54f2c3829e3897670dae14ed7d89793bc77bf8ac3233499210d7ba2028a4e768.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/main.min.ac249e87a9344138983705a8a34b2ffb44dc9562bb6a8044b4e2a1c77d34969d.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/menu.min.ba0282a0c881e6f496c175f08a36ef2709a925da76e74cab134fbe61e38e65a6.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/post.min.2a783b8ca158591aebd67d68789f3b098ba3c8b32884118202349a7f10e9c496.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/terminal.min.dd0bf9c7cacb24c1b0184f52f1869b274e06689557468cc7030ccf632328eb97.css">
+
+  
+  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+
+
+
+
+
+
+
+<link rel="shortcut icon" href="http://localhost:1313/BLOG/favicon.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/BLOG/apple-touch-icon.png">
+
+
+<meta name="twitter:card" content="summary" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="FALSE SHARING">
+<meta property="og:description" content="The article explores the performance issue known as False Sharing, which affects concurrent programs due to shared access to cache lines in modern processors. It details its impact, explains how to identify it, and presents various strategies in C to mitigate it, including data alignment and padding. The results show how small adjustments in data organization can significantly improve performance, highlighting the importance of optimizing concurrent applications to maximize hardware efficiency." />
+<meta property="og:url" content="http://localhost:1313/BLOG/en/posts/false-sharing/" />
+<meta property="og:site_name" content="Gonzalo Silvalde" />
+
+  <meta property="og:image" content="http://localhost:1313/BLOG/og-image.png">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-01-13 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div class="container">
+
+  
+
+<header class="header">
+  <div class="header__inner">
+    
+    <div class="header__logo">
+      <a href="/BLOG/en/">
+  <div class="logo">
+    Gonzalo
+  </div>
+</a>
+
+    </div>
+    
+    
+    <div class="header__menu">
+      <div class="header__lines">
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+
+      
+      
+        <ul class="menu menu--desktop menu--language-selector">
+  <li class="menu__trigger">English&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        <li><a href="http://localhost:1313/BLOG/en/posts/false-sharing/">English</a></li>
+      
+        <li><a href="http://localhost:1313/BLOG/es/posts/false-sharing/">Español</a></li>
+      
+    </ul>
+  </li>
+</ul>
+
+      
+    </div>
+  </div>
+  
+  
+  <div class="header__social-container">
+    
+    <div class="header__social">
+      <a href="https://github.com/Gonzalosilvalde" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 .5C5.7.5.8 5.4.8 11.7c0 4.9 3.2 9 7.6 10.5.6.1.8-.3.8-.6v-2c-3.1.6-3.7-1.4-3.7-1.4-.6-1.5-1.5-1.9-1.5-1.9-1.2-.8.1-.8.1-.8 1.3.1 2 .8 2.3 1.1 1.1 2 2.9 1.4 3.6 1.1.1-.8.4-1.4.8-1.7-2.5-.3-5.2-1.3-5.2-5.7 0-1.3.5-2.4 1.2-3.3-.1-.3-.5-1.4.1-2.8 0 0 1-.3 3.4 1.2a11.6 11.6 0 0 1 6.2 0c2.5-1.5 3.4-1.2 3.4-1.2.6 1.4.3 2.5.1 2.8.8.9 1.2 2 1.2 3.3 0 4.4-2.7 5.4-5.3 5.7.5.4.8 1.2.8 2.4v3.6c0 .3.2.7.8.6 4.4-1.5 7.6-5.6 7.6-10.5C23.2 5.4 18.3.5 12 .5z"/>
+        </svg>
+      </a>
+    </div>
+    <div class="header__socialb">
+      <a href="https://www.linkedin.com/in/gonzalo-silvalde-blanco-086942246/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 8h4v12H3V8zm7.5 0h3.9v1.68h.06c.54-1.02 1.88-2.1 3.87-2.1 4.14 0 4.9 2.73 4.9 6.28V20h-4v-5.46c0-1.3-.03-2.96-1.8-2.96-1.8 0-2.08 1.4-2.08 2.86V20h-4V8z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+   <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/BLOG/en/tags/" >Tags</a></li>
+        
+      
+        
+          <li><a href="/BLOG/en/about/" >About</a></li>
+        
+      
+    
+  </ul>
+</nav>
+ 
+</header>
+
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/BLOG/en/posts/false-sharing/">FALSE SHARING</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-01-13</time></div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="http://localhost:1313/BLOG/en/tags/programming/">programming</a>&nbsp;
+      
+      #<a href="http://localhost:1313/BLOG/en/tags/c/">C</a>&nbsp;
+      
+      #<a href="http://localhost:1313/BLOG/en/tags/cache/">Cache</a>&nbsp;
+      
+      #<a href="http://localhost:1313/BLOG/en/tags/concurrency/">Concurrency</a>&nbsp;
+      
+      #<a href="http://localhost:1313/BLOG/en/tags/perf/">Perf</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>Recently, I decided to analyze the speed of some of my C projects to identify areas for improvement. During this process, I came across a concept that caught my attention: <strong>False Sharing</strong>.</p>
+<p>False Sharing is a performance issue that can affect concurrent programs. It occurs when multiple threads access and modify different variables that, coincidentally, share the same cache line. This phenomenon leads to frequent cache invalidations, slowing down the program even if the variables are not logically related.</p>
+<h2 id="technical-context">Technical Context<a href="#technical-context" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>To better understand this issue, it is useful to consider how modern processors handle memory:</p>
+<ul>
+<li><strong>Cache hierarchy</strong>: Processors have cache levels (L1, L2, L3) that minimize latency when accessing memory.</li>
+<li><strong>Cache lines</strong>: Main memory is organized into blocks called cache lines, typically 64 bytes in size (though this can vary by architecture).</li>
+<li><strong>Access and coherence</strong>: When a thread accesses a variable, the cache line containing it is loaded into the CPU&rsquo;s cache. If another thread modifies a different variable within the same cache line, the entire line is invalidated in other caches. This forces it to be reloaded from main memory or the modifying cache, negatively impacting performance.</li>
+</ul>
+<h2 id="example">Example<a href="#example" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;pthread.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;time.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define iterations 1000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> point{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> y;
+</span></span><span style="display:flex;"><span>}point;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pthread_mutex_t</span> mutex_x <span style="color:#f92672">=</span> PTHREAD_MUTEX_INITIALIZER;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pthread_mutex_t</span> mutex_y <span style="color:#f92672">=</span> PTHREAD_MUTEX_INITIALIZER;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sum_x</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>arg)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1000</span>; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        point.x<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}    
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">sum_y</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>arg)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1000</span>; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        point.y<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>()
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pthread_t</span> thread1, thread2;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> iter <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; iter <span style="color:#f92672">&lt;</span> iterations; iter<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>        point.x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>        point.y <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">pthread_create</span>(<span style="color:#f92672">&amp;</span>thread1, NULL, sum_x, NULL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">pthread_create</span>(<span style="color:#f92672">&amp;</span>thread2, NULL, sum_y, NULL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">pthread_join</span>(thread1, NULL);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">pthread_join</span>(thread2, NULL);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">pthread_mutex_destroy</span>(<span style="color:#f92672">&amp;</span>mutex_x);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">pthread_mutex_destroy</span>(<span style="color:#f92672">&amp;</span>mutex_y);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><ul>
+<li>Thread 1 updates <code>point.x</code> while thread 2 updates <code>point.y</code>.</li>
+<li>Even though <code>point.x</code> and <code>point.y</code> are independent variables, they share the same cache line.</li>
+<li>Every time one thread modifies its variable, the cache line is invalidated in the other thread&rsquo;s cache, forcing costly synchronization operations between caches.</li>
+</ul>
+<p>This has three main effects:</p>
+<ol>
+<li><strong>Performance degradation</strong>: Latency increases due to frequent cache invalidations.</li>
+<li><strong>Higher memory bus usage</strong>: Communication between processor cores increases.</li>
+<li><strong>Scaling difficulty</strong>: The problem can worsen as more threads are added.</li>
+</ol>
+<h2 id="how-to-mitigate-this-effect">How to Mitigate This Effect?<a href="#how-to-mitigate-this-effect" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>There are multiple ways to mitigate <strong>False Sharing</strong> in C for this specific case. Here are three options and their performance results for different optimizations:</p>
+<ol>
+<li><strong>Align variables to 64 bytes</strong>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> point {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> y <span style="color:#a6e22e">__attribute__</span>((<span style="color:#a6e22e">aligned</span>(<span style="color:#ae81ff">64</span>)));
+</span></span><span style="display:flex;"><span>}point;
+</span></span></code></pre></div><p>This solution separates variables into different cache lines, eliminating False Sharing. It is memory-efficient and significantly improves performance.</p>
+<ol start="2">
+<li><strong>Align the entire struct</strong>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> point {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> y;
+</span></span><span style="display:flex;"><span>} <span style="color:#a6e22e">__attribute__</span>((<span style="color:#a6e22e">aligned</span>(<span style="color:#ae81ff">64</span>))) point;
+</span></span></code></pre></div><p>Aligns the struct to 64 bytes. While it improves overall access, it does not eliminate False Sharing between <code>x</code> and <code>y</code>.</p>
+<ol start="3">
+<li><strong>Add explicit padding</strong>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> point {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> padding[<span style="color:#ae81ff">64</span>];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> y;
+</span></span><span style="display:flex;"><span>}point;
+</span></span></code></pre></div><p>Physically separates <code>x</code> and <code>y</code> in memory. While it eliminates False Sharing, it increases memory usage and can negatively impact performance.</p>
+<ol start="4">
+<li><strong>Use independent global variables</strong>:</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> x;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> y;
+</span></span></code></pre></div><p>Avoids False Sharing but may not always be practical.</p>
+<h2 id="performance-analysis">Performance Analysis<a href="#performance-analysis" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Using <code>perf</code>, I analyzed the impact of each solution:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>perf record -o perf_program1.data ./program  
+</span></span><span style="display:flex;"><span>perf report -i perf_program1.data  
+</span></span></code></pre></div><h3 id="base-case">Base Case<a href="#base-case" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>The <code>perf</code> report looks like this:</p>
+<blockquote>
+<p>8,72%  prueba1  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5<br>
+7,75%  prueba1  [kernel.kallsyms]     [k] memset<br>
+5,79%  prueba1  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt<br>
+3,25%  prueba1  [kernel.kallsyms]     [k] clear_page_rep<br>
+2,78%  prueba1  [kernel.kallsyms]     [k] unmap_page_range<br>
+2,46%  prueba1  [kernel.kallsyms]     [k] native_queued_spin_lock_slowpath<br>
+2,11%  prueba1  [kernel.kallsyms]     [k] native_write_msr<br>
+1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p></blockquote>
+<h3 id="case-with-y-alignment">Case with <code>y</code> Alignment<a href="#case-with-y-alignment" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Aligning <code>y</code> to 64 bytes eliminates False Sharing:</p>
+<blockquote>
+<p>19,27%  prueba2  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5<br>
+19,15%  prueba2  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt<br>
+10,31%  prueba2  [kernel.kallsyms]     [k] memset<br>
+9,63%  prueba2  [kernel.kallsyms]     [k] clear_page_rep<br>
+5,38%  prueba2  [kernel.kallsyms]     [k] native_write_msr<br>
+1,98%  prueba2  [kernel.kallsyms]     [k] __list_del_entry_valid<br>
+1,29%  prueba2  [kernel.kallsyms]     [k] copy_process<br>
+1,20%  prueba2  [kernel.kallsyms]     [k] __memcg_kmem_charge_page<br>
+1,20%  prueba2  [kernel.kallsyms]     [k] alloc_vmap_area<br>
+1,06%  prueba2  [kernel.kallsyms]     [k] memcpy<br>
+0,85%  prueba2  prueba2               [.] sum_x<br>
+0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p></blockquote>
+<p>Explicit synchronization dominates resource usage, eliminating bottlenecks in the cache.</p>
+<h3 id="case-with-struct-alignment">Case with Struct Alignment<a href="#case-with-struct-alignment" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Aligning the entire struct does not eliminate False Sharing between <code>x</code> and <code>y</code>, as they remain in the same cache line:</p>
+<blockquote>
+<p>19,74%  prueba4  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5<br>
+19,24%  prueba4  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt<br>
+5,86%  prueba4  [kernel.kallsyms]     [k] native_write_msr<br>
+5,85%  prueba4  [kernel.kallsyms]     [k] memset<br>
+2,59%  prueba4  [kernel.kallsyms]     [k] clear_page_rep<br>
+2,05%  prueba4  [kernel.kallsyms]     [k] unmap_page_range<br>
+1,31%  prueba4  [kernel.kallsyms]     [k] psi_group_change<br>
+1,26%  prueba4  [kernel.kallsyms]     [k] memcpy<br>
+0,95%  prueba4  [kernel.kallsyms]     [k] copy_process<br>
+0,86%  prueba4  [kernel.kallsyms]     [k] native_read_msr<br>
+0,84%  prueba4  [kernel.kallsyms]     [k] memcg_slab_post_alloc_hook<br>
+0,84%  prueba4  prueba4               [.] sum_x<br>
+0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p></blockquote>
+<p>Although it slightly improves overall performance by optimizing global access to the struct, false sharing persists, limiting the gains.</p>
+<h3 id="case-with-explicit-padding">Case with Explicit Padding<a href="#case-with-explicit-padding" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Adding explicit padding eliminates False Sharing but introduces additional costs due to the increased struct size:</p>
+<blockquote>
+<p>22,11%  prueba5  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5<br>
+21,95%  prueba5  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt<br>
+7,58%  prueba5  [kernel.kallsyms]     [k] native_write_msr<br>
+5,12%  prueba5  [kernel.kallsyms]     [k] memset<br>
+2,57%  prueba5  [kernel.kallsyms]     [k] clear_page_rep<br>
+1,50%  prueba5  [kernel.kallsyms]     [k] copy_process<br>
+1,40%  prueba5  [kernel.kallsyms]     [k] psi_group_change<br>
+1,05%  prueba5  [kernel.kallsyms]     [k] native_read_msr<br>
+0,89%  prueba5  prueba5               [.] sum_x<br>
+0,81%  prueba5  [kernel.kallsyms]     [k] retbleed_return_thunk<br>
+0,76%  prueba5  [kernel.kallsyms]     [k] ___slab_alloc<br>
+0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p></blockquote>
+<p>The increased memory usage reduces cache data density, penalizing prefetching and limiting improvements.</p>
+<h3 id="case-with-independent-variables">Case with Independent Variables<a href="#case-with-independent-variables" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Using independent global variables eliminates False Sharing, but performance does not improve significantly:</p>
+<blockquote>
+<p>32,54%  prueba6  libc.so.6             [.] __GI___pthread_mutex_unlock_usercnt<br>
+21,81%  prueba6  libc.so.6             [.] pthread_mutex_lock@@GLIBC_2.2.5<br>
+6,89%  prueba6  [kernel.kallsyms]     [k] memset<br>
+5,90%  prueba6  prueba6               [.] sum_y<br>
+4,81%  prueba6  [kernel.kallsyms]     [k] native_write_msr<br>
+1,00%  prueba6  [kernel.kallsyms]     [k] _raw_spin_lock<br>
+0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p></blockquote>
+<p>This is due to the overhead of explicit synchronization and the latency of accessing global memory.</p>
+<h3 id="conclusion-of-perf">Conclusion of <code>perf</code><a href="#conclusion-of-perf" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>The analysis of the results obtained with <code>perf</code> and the measured times for the different configurations reveals how alignment strategies and data design impact performance, explaining the effect in each case.</p>
+<p>In the base case, the variables <code>x</code> and <code>y</code> are in the same struct without any specific alignment. This causes them to share the same cache line, leading to false sharing when threads concurrently access these variables. The <code>perf</code> report shows significant usage of functions related to synchronization, such as <code>native_queued_spin_lock_slowpath</code> and <code>memset</code>, indicating that threads are constantly invalidating cache lines. This behavior explains the relatively high execution time (123.93 seconds), as false sharing introduces significant overhead.</p>
+<p>When the variable <code>y</code> is aligned to 64 bytes, false sharing is eliminated because <code>x</code> and <code>y</code> occupy different cache lines. This results in a significant improvement in execution time (83.21 seconds). The <code>perf</code> report shows that functions like <code>native_queued_spin_lock_slowpath</code> disappear, while <code>pthread_mutex_lock</code> and <code>pthread_mutex_unlock</code> dominate the cycle consumption, reflecting that explicit synchronization is now the main cost. This configuration turns out to be the most efficient, as it eliminates the false sharing bottleneck without introducing significant overhead.</p>
+<p>In this case, there is no evidence of false sharing in the <code>perf</code> report, as <code>native_queued_spin_lock_slowpath</code> and other clear indicators of cache contention do not appear. However, aligning the entire <code>struct</code> to 64 bytes does not eliminate the false sharing between <code>x</code> and <code>y</code> because both variables remain in the same cache line. This slightly improves overall performance by optimizing access to the <code>struct</code>, but false sharing persists, limiting the gains. Performance is slightly worse than aligning only the individual variables, likely due to the increased memory usage, which adds pressure on the cache. Furthermore, synchronization functions like <code>pthread_mutex_lock</code> and <code>pthread_mutex_unlock</code> are the primary bottlenecks, indicating that the problem is more related to synchronization than data organization.</p>
+<p>When explicit padding is used to separate <code>x</code> and <code>y</code> in memory, false sharing disappears. However, this strategy introduces an additional cost due to the increased size of the struct, which reduces cache data density and complicates prefetching. This results in the worst performance observed (127.01 seconds). The <code>perf</code> analysis confirms that, while false sharing is eliminated, the time is still dominated by synchronization functions (<code>pthread_mutex_lock</code> and <code>pthread_mutex_unlock</code>), limiting the improvements.</p>
+<p>Finally, using independent global variables instead of a struct should eliminate false sharing. However, the performance achieved (124.81 seconds) is comparable to the base case. The <code>perf</code> report indicates that the high proportion of time spent in <code>pthread_mutex_lock</code> and <code>pthread_mutex_unlock</code> reflects the overhead of explicit synchronization. Moreover, although cache invalidation is eliminated, global access may introduce small penalties due to memory access latency, explaining the lack of significant improvement.</p>
+<h3 id="results">Results<a href="#results" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>In this section, I show the speed results in seconds for the program with different ways of declaring the variables in 1,000,000 iterations and with different types of optimization.</p>
+<p>-O0:</p>
+<table>
+  <thead>
+      <tr>
+          <th>configuration</th>
+          <th>nº iterations</th>
+          <th>speed (s)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Base case</td>
+          <td>1000000</td>
+          <td>123.933620</td>
+      </tr>
+      <tr>
+          <td>Align <code>y</code></td>
+          <td>1000000</td>
+          <td>83.217787</td>
+      </tr>
+      <tr>
+          <td>Align complete struct</td>
+          <td>1000000</td>
+          <td>99.541299</td>
+      </tr>
+      <tr>
+          <td>Explicit padding (<code>char[64]</code>)</td>
+          <td>1000000</td>
+          <td>127.010401</td>
+      </tr>
+      <tr>
+          <td>Variables outside the struct</td>
+          <td>1000000</td>
+          <td>124.819451</td>
+      </tr>
+  </tbody>
+</table>
+<p>-O1:</p>
+<table>
+  <thead>
+      <tr>
+          <th>configuration</th>
+          <th>nº iterations</th>
+          <th>speed (s)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Base case</td>
+          <td>1000000</td>
+          <td>120.383218</td>
+      </tr>
+      <tr>
+          <td>Align <code>y</code></td>
+          <td>1000000</td>
+          <td>79.891089</td>
+      </tr>
+      <tr>
+          <td>Align complete struct</td>
+          <td>1000000</td>
+          <td>104.526728</td>
+      </tr>
+      <tr>
+          <td>Explicit padding (<code>char[64]</code>)</td>
+          <td>1000000</td>
+          <td>79.828506</td>
+      </tr>
+      <tr>
+          <td>Variables outside the struct</td>
+          <td>1000000</td>
+          <td>105.029095</td>
+      </tr>
+  </tbody>
+</table>
+<p>-O2:</p>
+<table>
+  <thead>
+      <tr>
+          <th>configuration</th>
+          <th>nº iterations</th>
+          <th>speed (s)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Base case</td>
+          <td>1000000</td>
+          <td>120.622384</td>
+      </tr>
+      <tr>
+          <td>Align <code>y</code></td>
+          <td>1000000</td>
+          <td>80.128776</td>
+      </tr>
+      <tr>
+          <td>Align complete struct</td>
+          <td>1000000</td>
+          <td>103.547142</td>
+      </tr>
+      <tr>
+          <td>Explicit padding (<code>char[64]</code>)</td>
+          <td>1000000</td>
+          <td>79.989479</td>
+      </tr>
+      <tr>
+          <td>Variables outside the struct</td>
+          <td>1000000</td>
+          <td>103.280250</td>
+      </tr>
+  </tbody>
+</table>
+<p>-O3:</p>
+<table>
+  <thead>
+      <tr>
+          <th>configuration</th>
+          <th>nº iterations</th>
+          <th>speed (s)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Base case</td>
+          <td>1000000</td>
+          <td>120.887245</td>
+      </tr>
+      <tr>
+          <td>Align <code>y</code></td>
+          <td>1000000</td>
+          <td>79.762786</td>
+      </tr>
+      <tr>
+          <td>Align complete struct</td>
+          <td>1000000</td>
+          <td>103.815620</td>
+      </tr>
+      <tr>
+          <td>Explicit padding (<code>char[64]</code>)</td>
+          <td>1000000</td>
+          <td>79.586391</td>
+      </tr>
+      <tr>
+          <td>Variables outside the struct</td>
+          <td>1000000</td>
+          <td>101.085188</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="why-optimizations-from--o1-improve-execution-time">Why optimizations from -O1 improve execution time?<a href="#why-optimizations-from--o1-improve-execution-time" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>When a program is compiled with optimizations starting from <code>-O1</code>, the compiler begins to make fundamental adjustments that significantly improve performance. At this level, redundant calculations are eliminated, instructions are reorganized to better utilize CPU resources, and memory accesses are optimized, reducing latency. These automatic changes complement manual optimizations, such as data alignment, by allowing the hardware to operate more efficiently, especially in cases where problems like false sharing have been mitigated.</p>
+<p>At higher levels of optimization, such as <code>-O2</code> and <code>-O3</code>, the compiler introduces more advanced techniques, such as vectorization, aggressive branch elimination, and function inlining, which further reduce execution overhead. However, the impact on execution times stabilizes, as the main bottleneck (such as explicit synchronization in multithreaded programs) cannot always be eliminated with just code optimization. This highlights the importance of combining careful data design with the compiler&rsquo;s capabilities to achieve the best possible performance.</p>
+<h3 id="final-reflection">Final Reflection<a href="#final-reflection" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Performance in concurrent applications is deeply linked to how data is structured and accessed in memory. As we have seen, issues like False Sharing can arise from small oversights in data structure design but have a disproportionate impact on performance. Fortunately, with a methodical approach and tools like <code>perf</code>, it is possible to identify these issues and address them with simple but effective optimizations.</p>
+<p>This article reflects my current understanding of the topic and my intention to share useful knowledge. However, if there is anything that can be improved, corrected, or expanded, I would be happy to receive your feedback. Feel free to contact me via email to share your comments, experiences, or any corrections you consider necessary.</p>
+<hr>
+<h3 id="glossary-of-terms">Glossary of terms:<a href="#glossary-of-terms" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<ul>
+<li><strong>False Sharing</strong>: Occurs when multiple threads access different variables that share the same cache line. This causes unnecessary conflicts in the cache, degrading performance.</li>
+<li><strong>Cache Line</strong>: The smallest unit of data that the CPU cache exchanges with main memory. Its size is typically 64 bytes in most modern processors.</li>
+<li><strong>Data Alignment</strong>: A technique that organizes data in memory so that it matches the cache line boundaries, minimizing conflicts between threads.</li>
+<li><strong>Padding</strong>: The process of adding extra bytes between elements of a data structure to prevent them from sharing cache lines.</li>
+<li><strong>Compiler Optimization</strong>: Automatic adjustments made by the compiler at different levels (<code>-O1</code>, <code>-O2</code>, <code>-O3</code>) to improve a program&rsquo;s performance without altering its functionality.</li>
+<li><strong>Prefetching</strong>: A technique used by processors to load data into the cache before it is needed, reducing access latency.</li>
+<li><strong>Explicit Synchronization</strong>: The use of primitives like mutexes or semaphores to coordinate access to shared resources between threads.</li>
+<li><strong>Cache Data Density</strong>: The amount of useful data that can be stored in the cache simultaneously; it affects overall performance in systems that depend on memory access speed.</li>
+</ul>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/BLOG/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
