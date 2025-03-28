@@ -2,67 +2,67 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Gonzalo Silvalde</title>
-    <link>https://gonzalosilvalde.github.io/BLOG/en/tags/</link>
+    <link>http://localhost:1313/BLOG/en/tags/</link>
     <description>Recent content in Tags on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/en/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/BLOG/en/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/tags/c/</link>
+      <link>http://localhost:1313/BLOG/en/tags/c/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/tags/c/</guid>
+      <guid>http://localhost:1313/BLOG/en/tags/c/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Cache</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/tags/cache/</link>
+      <link>http://localhost:1313/BLOG/en/tags/cache/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/tags/cache/</guid>
+      <guid>http://localhost:1313/BLOG/en/tags/cache/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Concurrency</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/tags/concurrency/</link>
+      <link>http://localhost:1313/BLOG/en/tags/concurrency/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/tags/concurrency/</guid>
+      <guid>http://localhost:1313/BLOG/en/tags/concurrency/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Perf</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/tags/perf/</link>
+      <link>http://localhost:1313/BLOG/en/tags/perf/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/tags/perf/</guid>
+      <guid>http://localhost:1313/BLOG/en/tags/perf/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Programming</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/tags/programming/</link>
+      <link>http://localhost:1313/BLOG/en/tags/programming/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/tags/programming/</guid>
+      <guid>http://localhost:1313/BLOG/en/tags/programming/</guid>
       <description></description>
       <content></content>
     </item>
     
     <item>
       <title>Ada-Lang</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/tags/ada-lang/</link>
+      <link>http://localhost:1313/BLOG/en/tags/ada-lang/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/tags/ada-lang/</guid>
+      <guid>http://localhost:1313/BLOG/en/tags/ada-lang/</guid>
       <description></description>
       <content></content>
     </item>

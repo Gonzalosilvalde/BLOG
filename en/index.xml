@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gonzalo Silvalde</title>
-    <link>https://gonzalosilvalde.github.io/BLOG/en/</link>
+    <link>http://localhost:1313/BLOG/en/</link>
     <description>Recent content on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/en/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/BLOG/en/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>FALSE SHARING</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/posts/false-sharing/</link>
+      <link>http://localhost:1313/BLOG/en/posts/false-sharing/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/posts/false-sharing/</guid>
+      <guid>http://localhost:1313/BLOG/en/posts/false-sharing/</guid>
       <description>The article explores the performance issue known as False Sharing, which affects concurrent programs due to shared access to cache lines in modern processors. It details its impact, explains how to identify it, and presents various strategies in C to mitigate it, including data alignment and padding. The results show how small adjustments in data organization can significantly improve performance, highlighting the importance of optimizing concurrent applications to maximize hardware efficiency.</description>
       <content>&lt;p&gt;Recently, I decided to analyze the speed of some of my C projects to identify areas for improvement. During this process, I came across a concept that caught my attention: &lt;strong&gt;False Sharing&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;False Sharing is a performance issue that can affect concurrent programs. It occurs when multiple threads access and modify different variables that, coincidentally, share the same cache line. This phenomenon leads to frequent cache invalidations, slowing down the program even if the variables are not logically related.&lt;/p&gt;
@@ -376,20 +376,27 @@
     </item>
     
     <item>
-      <title>About</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/about/</link>
+      <title>About Me</title>
+      <link>http://localhost:1313/BLOG/en/about/</link>
       <pubDate>Thu, 07 Nov 2024 23:07:25 +0100</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/about/</guid>
-      <description>&lt;p&gt;Hi! I’m Gonzalo Silvalde Blanco, a Computer Engineering student specializing in Computing at the University of A Coruña. I’m passionate about technology and constantly seeking new challenges, which has helped me develop strong skills in programming, algorithm design, and data analysis.&lt;/p&gt;
-&lt;p&gt;I thrive in team environments, often taking on leadership roles, and I enjoy tackling complex problems with determination. Currently, I’m contributing to the Linux kernel, where I’ve had the privilege to make a meaningful contribution—an experience that has been incredibly rewarding.&lt;/p&gt;</description>
-      <content>&lt;p&gt;Hi! I’m Gonzalo Silvalde Blanco, a Computer Engineering student specializing in Computing at the University of A Coruña. I’m passionate about technology and constantly seeking new challenges, which has helped me develop strong skills in programming, algorithm design, and data analysis.&lt;/p&gt;
-&lt;p&gt;I thrive in team environments, often taking on leadership roles, and I enjoy tackling complex problems with determination. Currently, I’m contributing to the Linux kernel, where I’ve had the privilege to make a meaningful contribution—an experience that has been incredibly rewarding.&lt;/p&gt;
-&lt;p&gt;I’m fluent in both Spanish and Galician, with full professional proficiency in English, which allows me to engage and learn in international settings. My technical skills include proficiency in Python, Java, C, Scala, and recently Rust, thanks to advanced courses I&amp;rsquo;ve completed on Udemy, including deep learning with PyTorch.&lt;/p&gt;
+      <guid>http://localhost:1313/BLOG/en/about/</guid>
+      <description>&lt;p&gt;Hi! I’m Gonzalo Silvalde Blanco, a Computer Engineering graduate specializing in Computer Science at the University of A Coruña. I’m passionate about technology and constantly seeking new challenges, which has helped me develop strong skills in programming, algorithm design, and data analysis.&lt;/p&gt;
+&lt;p&gt;I thrive in team environments, often taking on leadership roles, and I enjoy tackling complex problems with determination.&lt;/p&gt;</description>
+      <content>&lt;p&gt;Hi! I’m Gonzalo Silvalde Blanco, a Computer Engineering graduate specializing in Computer Science at the University of A Coruña. I’m passionate about technology and constantly seeking new challenges, which has helped me develop strong skills in programming, algorithm design, and data analysis.&lt;/p&gt;
+&lt;p&gt;I thrive in team environments, often taking on leadership roles, and I enjoy tackling complex problems with determination.&lt;/p&gt;
+&lt;p&gt;I’m fluent in both Spanish and Galician, with full professional proficiency in English, which allows me to engage and learn in international settings. My technical skills include proficiency in Python, C and recently Rust.&lt;/p&gt;
+&lt;p&gt;During the last year I have specialized in Deep Learning, deepening in the use of PyTorch to develop my Final Degree Project. This project, entitled “Multi-task segmentation of anatomical structures of the fundus of the eye using Multi-Adaptive Optimization”, allowed me to obtain a 10 (Honors).&lt;/p&gt;
 &lt;p&gt;I aim to keep growing professionally and to leverage my skills to solve meaningful problems. Thanks for stopping by!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Open Source Projects&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;[fbdev: sstfb: Make CONFIG_FB_DEVICE optional]&lt;/strong&gt;: (&lt;a href=&#34;https://github.com/torvalds/linux/commit/447794e44744aff3c0f11942b83b878b8bb6f72b&#34;&gt;https://github.com/torvalds/linux/commit/447794e44744aff3c0f11942b83b878b8bb6f72b&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;[PCSX2 Mouse Grab]&lt;/strong&gt;: (&lt;a href=&#34;https://github.com/PCSX2/pcsx2/pull/12239&#34;&gt;https://github.com/PCSX2/pcsx2/pull/12239&lt;/a&gt;, &lt;a href=&#34;https://github.com/PCSX2/pcsx2/pull/12320&#34;&gt;https://github.com/PCSX2/pcsx2/pull/12320&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;[Fix SyntaxWarning (Still on PR)]&lt;/strong&gt;: (&lt;a href=&#34;https://salsa.debian.org/hpc-team/jube/-/merge_requests/1&#34;&gt;https://salsa.debian.org/hpc-team/jube/-/merge_requests/1&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;&lt;strong&gt;Contact&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Correo&lt;/strong&gt;: &lt;a href=&#34;mailto:gonzalo.silvalde@gmail.com&#34;&gt;gonzalo.silvalde@gmail.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Email&lt;/strong&gt;: &lt;a href=&#34;mailto:gonzalo.silvalde@gmail.com&#34;&gt;gonzalo.silvalde@gmail.com&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;LinkedIn&lt;/strong&gt;: &lt;a href=&#34;https://www.linkedin.com/in/gonzalo-silvalde-blanco-086942246/&#34;&gt;linkedin.com/in/gonzalo-silvalde-blanco&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;: &lt;a href=&#34;https://github.com/Gonzalosilvalde&#34;&gt;github.com/Gonzalosilvalde&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -398,10 +405,10 @@
     
     <item>
       <title>Getting Started with ADA</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</link>
+      <link>http://localhost:1313/BLOG/en/posts/ada-introduction/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</guid>
+      <guid>http://localhost:1313/BLOG/en/posts/ada-introduction/</guid>
       <description>A practical approach to Ada, an uncommon yet powerful language, ideal for high-security systems. From basic concepts to advanced challenges, discover how I began experimenting with its functions and tools.</description>
       <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;

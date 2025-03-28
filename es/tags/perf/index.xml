@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Perf on Gonzalo Silvalde</title>
-    <link>https://gonzalosilvalde.github.io/BLOG/es/tags/perf/</link>
+    <link>http://localhost:1313/BLOG/es/tags/perf/</link>
     <description>Recent content in Perf on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>es</language>
-    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/es/tags/perf/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/BLOG/es/tags/perf/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>FALSE SHARING</title>
-      <link>https://gonzalosilvalde.github.io/BLOG/es/posts/false-sharing/</link>
+      <link>http://localhost:1313/BLOG/es/posts/false-sharing/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://gonzalosilvalde.github.io/BLOG/es/posts/false-sharing/</guid>
+      <guid>http://localhost:1313/BLOG/es/posts/false-sharing/</guid>
       <description>El artículo explora el problema de rendimiento conocido como False Sharing, que afecta programas concurrentes debido al acceso compartido a líneas de caché en procesadores modernos. Detalla su impacto, explica cómo identificarlo y presenta diversas estrategias en C para mitigarlo, incluyendo la alineación de datos y el uso de padding. Los resultados muestran cómo pequeños ajustes en la organización de los datos pueden mejorar significativamente el rendimiento, destacando la importancia de optimizar las aplicaciones concurrentes para maximizar la eficiencia del hardware.</description>
       <content>&lt;p&gt;Recientemente, decidí analizar la velocidad de algunos de mis proyectos en C para identificar áreas de mejora. En este proceso, me topé con un concepto que llamó mucho mi atención: el &lt;strong&gt;False Sharing&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;El False Sharing es un problema de rendimiento que puede afectar programas concurrentes. Ocurre cuando varios hilos acceden y modifican variables distintas que, por casualidad, comparten la misma línea de caché. Este fenómeno provoca invalidaciones frecuentes de la caché, lo que ralentiza el programa, incluso si las variables no están lógicamente relacionadas entre sí.&lt;/p&gt;
