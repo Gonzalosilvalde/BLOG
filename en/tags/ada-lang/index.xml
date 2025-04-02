@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ada-Lang on Gonzalo Silvalde</title>
-    <link>http://localhost:1313/BLOG/en/tags/ada-lang/</link>
-    <description>Recent content in Ada-Lang on Gonzalo Silvalde</description>
+    <title>ada-lang on Gonzalo Silvalde</title>
+    <link>https://gonzalosilvalde.github.io/BLOG/en/tags/ada-lang/</link>
+    <description>Recent content in ada-lang on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 07 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/BLOG/en/tags/ada-lang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/en/tags/ada-lang/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Getting Started with ADA</title>
-      <link>http://localhost:1313/BLOG/en/posts/ada-introduction/</link>
+      <link>https://gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/BLOG/en/posts/ada-introduction/</guid>
+      <guid>https://gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</guid>
       <description>A practical approach to Ada, an uncommon yet powerful language, ideal for high-security systems. From basic concepts to advanced challenges, discover how I began experimenting with its functions and tools.</description>
       <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;

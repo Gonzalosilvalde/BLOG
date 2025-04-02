@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head><script src="/BLOG/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=BLOG/livereload" data-no-instant defer></script>
+<head>
   
     <title>FALSE SHARING :: Gonzalo Silvalde</title>
   
@@ -11,53 +11,53 @@
 
   <meta name="robots" content="noodp" />
 
-<link rel="canonical" href="http://localhost:1313/BLOG/es/posts/false-sharing/" />
+<link rel="canonical" href="https://gonzalosilvalde.github.io/BLOG/es/posts/false-sharing/" />
 
 
 
 
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/buttons.min.2bc533403a27dfe0e93105a92502b42ce4587e2e4a87d9f7d349e51e16e09478.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/code.min.00125962708925857e7b66dbc58391d55be1191a3d0ce2034de8c9cd2c481c36.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/fonts.min.4881f0c525f3ce2a1864fb6e96676396cebe1e6fcef1933e8e1dde7041004fb5.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/footer.min.2e3eb191baee58dd05a9f0104ac1fab0827bca7c64dafe0b2579f934c33a1d69.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/gist.min.a751e8b0abe1ba8bc53ced52a38b19d8950fe78ca29454ea8c2595cf26aad5c0.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/header.min.54f2c3829e3897670dae14ed7d89793bc77bf8ac3233499210d7ba2028a4e768.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/header.min.54f2c3829e3897670dae14ed7d89793bc77bf8ac3233499210d7ba2028a4e768.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/main.min.ac249e87a9344138983705a8a34b2ffb44dc9562bb6a8044b4e2a1c77d34969d.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/main.min.ac249e87a9344138983705a8a34b2ffb44dc9562bb6a8044b4e2a1c77d34969d.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/menu.min.ba0282a0c881e6f496c175f08a36ef2709a925da76e74cab134fbe61e38e65a6.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/menu.min.ba0282a0c881e6f496c175f08a36ef2709a925da76e74cab134fbe61e38e65a6.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/pagination.min.82f6400eae7c7c6dc3c866733c2ec0579e4089608fea69400ff85b3880aa0d3c.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/post.min.2a783b8ca158591aebd67d68789f3b098ba3c8b32884118202349a7f10e9c496.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/post.min.2a783b8ca158591aebd67d68789f3b098ba3c8b32884118202349a7f10e9c496.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/prism.min.9023bbc24533d09e97a51a0a42a5a7bfe4c591ae167c5551fb1d2191d11977c0.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/syntax.min.cc789ed9377260d7949ea4c18781fc58959a89287210fe4edbff44ebfc1511b6.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/terminal.min.dd0bf9c7cacb24c1b0184f52f1869b274e06689557468cc7030ccf632328eb97.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/terminal.min.dd0bf9c7cacb24c1b0184f52f1869b274e06689557468cc7030ccf632328eb97.css">
 
   
-  <link rel="stylesheet" href="http://localhost:1313/BLOG/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
+  <link rel="stylesheet" href="https://gonzalosilvalde.github.io/BLOG/css/terms.min.b81791663c3790e738e571cdbf802312390d30e4b1d8dc9d814a5b5454d0ac11.css">
 
 
 
@@ -65,8 +65,8 @@
 
 
 
-<link rel="shortcut icon" href="http://localhost:1313/BLOG/favicon.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/BLOG/apple-touch-icon.png">
+<link rel="shortcut icon" href="https://gonzalosilvalde.github.io/BLOG/favicon.png">
+<link rel="apple-touch-icon" href="https://gonzalosilvalde.github.io/BLOG/apple-touch-icon.png">
 
 
 <meta name="twitter:card" content="summary" />
@@ -77,10 +77,10 @@
 <meta property="og:type" content="article" />
 <meta property="og:title" content="FALSE SHARING">
 <meta property="og:description" content="El artículo explora el problema de rendimiento conocido como False Sharing, que afecta programas concurrentes debido al acceso compartido a líneas de caché en procesadores modernos. Detalla su impacto, explica cómo identificarlo y presenta diversas estrategias en C para mitigarlo, incluyendo la alineación de datos y el uso de padding. Los resultados muestran cómo pequeños ajustes en la organización de los datos pueden mejorar significativamente el rendimiento, destacando la importancia de optimizar las aplicaciones concurrentes para maximizar la eficiencia del hardware." />
-<meta property="og:url" content="http://localhost:1313/BLOG/es/posts/false-sharing/" />
+<meta property="og:url" content="https://gonzalosilvalde.github.io/BLOG/es/posts/false-sharing/" />
 <meta property="og:site_name" content="Gonzalo Silvalde" />
 
-  <meta property="og:image" content="http://localhost:1313/BLOG/og-image.png">
+  <meta property="og:image" content="https://gonzalosilvalde.github.io/BLOG/og-image.png">
 
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
@@ -133,9 +133,9 @@
   <li>
     <ul class="menu__dropdown">
       
-        <li><a href="http://localhost:1313/BLOG/en/posts/false-sharing/">English</a></li>
+        <li><a href="https://gonzalosilvalde.github.io/BLOG/en/posts/false-sharing/">English</a></li>
       
-        <li><a href="http://localhost:1313/BLOG/es/posts/false-sharing/">Español</a></li>
+        <li><a href="https://gonzalosilvalde.github.io/BLOG/es/posts/false-sharing/">Español</a></li>
       
     </ul>
   </li>
@@ -187,22 +187,22 @@
     
 <article class="post">
   <h1 class="post-title">
-    <a href="http://localhost:1313/BLOG/es/posts/false-sharing/">FALSE SHARING</a>
+    <a href="https://gonzalosilvalde.github.io/BLOG/es/posts/false-sharing/">FALSE SHARING</a>
   </h1>
   <div class="post-meta"><time class="post-date">2025-01-13</time></div>
 
   
     <span class="post-tags">
       
-      #<a href="http://localhost:1313/BLOG/es/tags/programming/">programming</a>&nbsp;
+      #<a href="https://gonzalosilvalde.github.io/BLOG/es/tags/programming/">programming</a>&nbsp;
       
-      #<a href="http://localhost:1313/BLOG/es/tags/c/">C</a>&nbsp;
+      #<a href="https://gonzalosilvalde.github.io/BLOG/es/tags/c/">C</a>&nbsp;
       
-      #<a href="http://localhost:1313/BLOG/es/tags/cache/">Cache</a>&nbsp;
+      #<a href="https://gonzalosilvalde.github.io/BLOG/es/tags/cache/">Cache</a>&nbsp;
       
-      #<a href="http://localhost:1313/BLOG/es/tags/concurrency/">Concurrency</a>&nbsp;
+      #<a href="https://gonzalosilvalde.github.io/BLOG/es/tags/concurrency/">Concurrency</a>&nbsp;
       
-      #<a href="http://localhost:1313/BLOG/es/tags/perf/">Perf</a>&nbsp;
+      #<a href="https://gonzalosilvalde.github.io/BLOG/es/tags/perf/">Perf</a>&nbsp;
       
     </span>
   
@@ -324,7 +324,8 @@
 <p>Usando perf, analicé el impacto de cada solución:</p>
 <blockquote>
 <p>perf record -o perf_programa1.data ./programa<br>
-perf report -i perf_programa1.data</p></blockquote>
+perf report -i perf_programa1.data</p>
+</blockquote>
 <h3 id="caso-base">Caso Base<a href="#caso-base" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>El reporte de <code>perf</code> se ve así:</p>
 <blockquote>
@@ -335,7 +336,8 @@ perf report -i perf_programa1.data</p></blockquote>
 2,78%  prueba1  [kernel.kallsyms]     [k] unmap_page_range<br>
 2,46%  prueba1  [kernel.kallsyms]     [k] native_queued_spin_lock_slowpath<br>
 2,11%  prueba1  [kernel.kallsyms]     [k] native_write_msr<br>
-1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p></blockquote>
+1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p>
+</blockquote>
 <h3 id="caso-con-alineación-y">Caso con alineación <code>y</code><a href="#caso-con-alineación-y" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Al alinear <code>y</code> a 64 bytes, el false sharing desaparece:</p>
 <blockquote>
@@ -350,7 +352,8 @@ perf report -i perf_programa1.data</p></blockquote>
 1,20%  prueba2  [kernel.kallsyms]     [k] alloc_vmap_area<br>
 1,06%  prueba2  [kernel.kallsyms]     [k] memcpy<br>
 0,85%  prueba2  prueba2               [.] sum_x<br>
-0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p></blockquote>
+0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p>
+</blockquote>
 <p>La sincronización explícita domina el uso de recursos, eliminando cuellos de botella en la caché.</p>
 <h3 id="caso-alineación-struct-completo">Caso alineación struct completo<a href="#caso-alineación-struct-completo" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Alinear el struct completo no elimina el false sharing entre x e y porque permanecen en la misma línea de caché:</p>
@@ -367,7 +370,8 @@ perf report -i perf_programa1.data</p></blockquote>
 0,86%  prueba4  [kernel.kallsyms]     [k] native_read_msr<br>
 0,84%  prueba4  [kernel.kallsyms]     [k] memcg_slab_post_alloc_hook<br>
 0,84%  prueba4  prueba4               [.] sum_x<br>
-0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p></blockquote>
+0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p>
+</blockquote>
 <p>Aunque mejora ligeramente el rendimiento general al optimizar el acceso global al struct, el false sharing persiste, limitando las ganancias.</p>
 <h2 id="caso-con-padding-explícito">Caso con Padding explícito<a href="#caso-con-padding-explícito" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>Agregar padding explícito elimina el false sharing, pero introduce costos adicionales por el mayor tamaño del struct:</p>
@@ -383,7 +387,8 @@ perf report -i perf_programa1.data</p></blockquote>
 0,89%  prueba5  prueba5               [.] sum_x<br>
 0,81%  prueba5  [kernel.kallsyms]     [k] retbleed_return_thunk<br>
 0,76%  prueba5  [kernel.kallsyms]     [k] ___slab_alloc<br>
-0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p></blockquote>
+0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p>
+</blockquote>
 <p>El aumento en el uso de memoria reduce la densidad de datos en caché, penalizando el prefetching y limitando las mejoras.</p>
 <h3 id="caso-con-variables-independientes">Caso con Variables Independientes<a href="#caso-con-variables-independientes" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>El uso de variables globales independientes elimina el false sharing, pero el rendimiento no mejora significativamente:</p>
@@ -394,7 +399,8 @@ perf report -i perf_programa1.data</p></blockquote>
 5,90%  prueba6  prueba6               [.] sum_y<br>
 4,81%  prueba6  [kernel.kallsyms]     [k] native_write_msr<br>
 1,00%  prueba6  [kernel.kallsyms]     [k] _raw_spin_lock<br>
-0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p></blockquote>
+0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p>
+</blockquote>
 <p>Esto se debe a la sobrecarga de sincronización explícita y a la latencia de acceso a memoria global.</p>
 <h3 id="conclusión-de-perf">Conclusión de <code>perf</code><a href="#conclusión-de-perf" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>El análisis de los resultados obtenidos con <code>perf</code> y los tiempos medidos para las diferentes configuraciones revela cómo afectan las estrategias de alineación y diseño de datos al rendimiento, explicando el impacto en cada caso.</p>
@@ -407,151 +413,151 @@ perf report -i perf_programa1.data</p></blockquote>
 <p>En este apartado muestro los resultados de la velocidad en segundos que tardo el programa con las diferentes formas de declarar las variables en 1000000 de iteraciones y con distintos tipos de optimización.</p>
 <p>-O0:</p>
 <table>
-  <thead>
-      <tr>
-          <th>configuración</th>
-          <th>nº iteraciones</th>
-          <th>velocidad (s)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Caso base</td>
-          <td>1000000</td>
-          <td>123.933620</td>
-      </tr>
-      <tr>
-          <td>Alinear  <code>y</code></td>
-          <td>1000000</td>
-          <td>83.217787</td>
-      </tr>
-      <tr>
-          <td>Alinear struct completo</td>
-          <td>1000000</td>
-          <td>99.541299</td>
-      </tr>
-      <tr>
-          <td>Padding explícito ( <code>char[64]</code>)</td>
-          <td>1000000</td>
-          <td>127.010401</td>
-      </tr>
-      <tr>
-          <td>Variables fuera del struct</td>
-          <td>1000000</td>
-          <td>124.819451</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th>configuración</th>
+<th>nº iteraciones</th>
+<th>velocidad (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caso base</td>
+<td>1000000</td>
+<td>123.933620</td>
+</tr>
+<tr>
+<td>Alinear  <code>y</code></td>
+<td>1000000</td>
+<td>83.217787</td>
+</tr>
+<tr>
+<td>Alinear struct completo</td>
+<td>1000000</td>
+<td>99.541299</td>
+</tr>
+<tr>
+<td>Padding explícito ( <code>char[64]</code>)</td>
+<td>1000000</td>
+<td>127.010401</td>
+</tr>
+<tr>
+<td>Variables fuera del struct</td>
+<td>1000000</td>
+<td>124.819451</td>
+</tr>
+</tbody>
 </table>
 <p>-O1:</p>
 <table>
-  <thead>
-      <tr>
-          <th>configuración</th>
-          <th>nº iteraciones</th>
-          <th>velocidad (s)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Caso base</td>
-          <td>1000000</td>
-          <td>120.383218</td>
-      </tr>
-      <tr>
-          <td>Alinear  <code>y</code></td>
-          <td>1000000</td>
-          <td>79.891089</td>
-      </tr>
-      <tr>
-          <td>Alinear struct completo</td>
-          <td>1000000</td>
-          <td>104.526728</td>
-      </tr>
-      <tr>
-          <td>Padding explícito ( <code>char[64]</code>)</td>
-          <td>1000000</td>
-          <td>79.828506</td>
-      </tr>
-      <tr>
-          <td>Variables fuera del struct</td>
-          <td>1000000</td>
-          <td>105.029095</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th>configuración</th>
+<th>nº iteraciones</th>
+<th>velocidad (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caso base</td>
+<td>1000000</td>
+<td>120.383218</td>
+</tr>
+<tr>
+<td>Alinear  <code>y</code></td>
+<td>1000000</td>
+<td>79.891089</td>
+</tr>
+<tr>
+<td>Alinear struct completo</td>
+<td>1000000</td>
+<td>104.526728</td>
+</tr>
+<tr>
+<td>Padding explícito ( <code>char[64]</code>)</td>
+<td>1000000</td>
+<td>79.828506</td>
+</tr>
+<tr>
+<td>Variables fuera del struct</td>
+<td>1000000</td>
+<td>105.029095</td>
+</tr>
+</tbody>
 </table>
 <p>-O2:</p>
 <table>
-  <thead>
-      <tr>
-          <th>configuración</th>
-          <th>nº iteraciones</th>
-          <th>velocidad (s)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Caso base</td>
-          <td>1000000</td>
-          <td>120.622384</td>
-      </tr>
-      <tr>
-          <td>Alinear  <code>y</code></td>
-          <td>1000000</td>
-          <td>80.128776</td>
-      </tr>
-      <tr>
-          <td>Alinear struct completo</td>
-          <td>1000000</td>
-          <td>103.547142</td>
-      </tr>
-      <tr>
-          <td>Padding explícito ( <code>char[64]</code>)</td>
-          <td>1000000</td>
-          <td>79.989479</td>
-      </tr>
-      <tr>
-          <td>Variables fuera del struct</td>
-          <td>1000000</td>
-          <td>103.280250</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th>configuración</th>
+<th>nº iteraciones</th>
+<th>velocidad (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caso base</td>
+<td>1000000</td>
+<td>120.622384</td>
+</tr>
+<tr>
+<td>Alinear  <code>y</code></td>
+<td>1000000</td>
+<td>80.128776</td>
+</tr>
+<tr>
+<td>Alinear struct completo</td>
+<td>1000000</td>
+<td>103.547142</td>
+</tr>
+<tr>
+<td>Padding explícito ( <code>char[64]</code>)</td>
+<td>1000000</td>
+<td>79.989479</td>
+</tr>
+<tr>
+<td>Variables fuera del struct</td>
+<td>1000000</td>
+<td>103.280250</td>
+</tr>
+</tbody>
 </table>
 <p>-O3:</p>
 <table>
-  <thead>
-      <tr>
-          <th>configuración</th>
-          <th>nº iteraciones</th>
-          <th>velocidad (s)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Caso base</td>
-          <td>1000000</td>
-          <td>120.887245</td>
-      </tr>
-      <tr>
-          <td>Alinear  <code>y</code></td>
-          <td>1000000</td>
-          <td>79.762786</td>
-      </tr>
-      <tr>
-          <td>Alinear struct completo</td>
-          <td>1000000</td>
-          <td>103.815620</td>
-      </tr>
-      <tr>
-          <td>Padding explícito ( <code>char[64]</code>)</td>
-          <td>1000000</td>
-          <td>79.586391</td>
-      </tr>
-      <tr>
-          <td>Variables fuera del struct</td>
-          <td>1000000</td>
-          <td>101.085188</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th>configuración</th>
+<th>nº iteraciones</th>
+<th>velocidad (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Caso base</td>
+<td>1000000</td>
+<td>120.887245</td>
+</tr>
+<tr>
+<td>Alinear  <code>y</code></td>
+<td>1000000</td>
+<td>79.762786</td>
+</tr>
+<tr>
+<td>Alinear struct completo</td>
+<td>1000000</td>
+<td>103.815620</td>
+</tr>
+<tr>
+<td>Padding explícito ( <code>char[64]</code>)</td>
+<td>1000000</td>
+<td>79.586391</td>
+</tr>
+<tr>
+<td>Variables fuera del struct</td>
+<td>1000000</td>
+<td>101.085188</td>
+</tr>
+</tbody>
 </table>
 <h3 id="por-qué-las-optimizaciones-desde--o1-mejoran-el-tiempo-de-ejecución">¿Por qué las optimizaciones desde -O1 mejoran el tiempo de ejecución?<a href="#por-qué-las-optimizaciones-desde--o1-mejoran-el-tiempo-de-ejecución" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Cuando un programa se compila con optimizaciones a partir de <code>-O1</code>, el compilador comienza a realizar ajustes fundamentales que mejoran significativamente el rendimiento. En este nivel, se eliminan cálculos redundantes, se reorganizan las instrucciones para aprovechar mejor los recursos de la CPU y se optimizan los accesos a memoria, reduciendo la latencia. Estos cambios automáticos complementan las optimizaciones manuales, como la alineación de datos, al permitir que el hardware trabaje con mayor eficiencia, especialmente en casos donde problemas como el false sharing han sido mitigados.</p>

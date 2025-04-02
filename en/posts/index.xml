@@ -2,17 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Gonzalo Silvalde</title>
-    <link>http://localhost:1313/BLOG/en/posts/</link>
+    <link>https://gonzalosilvalde.github.io/BLOG/en/posts/</link>
     <description>Recent content in Posts on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/BLOG/en/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/en/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>FALSE SHARING</title>
-      <link>http://localhost:1313/BLOG/en/posts/false-sharing/</link>
+      <link>https://gonzalosilvalde.github.io/BLOG/en/posts/false-sharing/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/BLOG/en/posts/false-sharing/</guid>
+      <guid>https://gonzalosilvalde.github.io/BLOG/en/posts/false-sharing/</guid>
       <description>The article explores the performance issue known as False Sharing, which affects concurrent programs due to shared access to cache lines in modern processors. It details its impact, explains how to identify it, and presents various strategies in C to mitigate it, including data alignment and padding. The results show how small adjustments in data organization can significantly improve performance, highlighting the importance of optimizing concurrent applications to maximize hardware efficiency.</description>
       <content>&lt;p&gt;Recently, I decided to analyze the speed of some of my C projects to identify areas for improvement. During this process, I came across a concept that caught my attention: &lt;strong&gt;False Sharing&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;False Sharing is a performance issue that can affect concurrent programs. It occurs when multiple threads access and modify different variables that, coincidentally, share the same cache line. This phenomenon leads to frequent cache invalidations, slowing down the program even if the variables are not logically related.&lt;/p&gt;
@@ -136,7 +135,8 @@
 2,78%  prueba1  [kernel.kallsyms]     [k] unmap_page_range&lt;br&gt;
 2,46%  prueba1  [kernel.kallsyms]     [k] native_queued_spin_lock_slowpath&lt;br&gt;
 2,11%  prueba1  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
-1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change&lt;/p&gt;&lt;/blockquote&gt;
+1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id=&#34;case-with-y-alignment&#34;&gt;Case with &lt;code&gt;y&lt;/code&gt; Alignment&lt;/h3&gt;
 &lt;p&gt;Aligning &lt;code&gt;y&lt;/code&gt; to 64 bytes eliminates False Sharing:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -151,7 +151,8 @@
 1,20%  prueba2  [kernel.kallsyms]     [k] alloc_vmap_area&lt;br&gt;
 1,06%  prueba2  [kernel.kallsyms]     [k] memcpy&lt;br&gt;
 0,85%  prueba2  prueba2               [.] sum_x&lt;br&gt;
-0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg&lt;/p&gt;&lt;/blockquote&gt;
+0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Explicit synchronization dominates resource usage, eliminating bottlenecks in the cache.&lt;/p&gt;
 &lt;h3 id=&#34;case-with-struct-alignment&#34;&gt;Case with Struct Alignment&lt;/h3&gt;
 &lt;p&gt;Aligning the entire struct does not eliminate False Sharing between &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;, as they remain in the same cache line:&lt;/p&gt;
@@ -168,7 +169,8 @@
 0,86%  prueba4  [kernel.kallsyms]     [k] native_read_msr&lt;br&gt;
 0,84%  prueba4  [kernel.kallsyms]     [k] memcg_slab_post_alloc_hook&lt;br&gt;
 0,84%  prueba4  prueba4               [.] sum_x&lt;br&gt;
-0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk&lt;/p&gt;&lt;/blockquote&gt;
+0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Although it slightly improves overall performance by optimizing global access to the struct, false sharing persists, limiting the gains.&lt;/p&gt;
 &lt;h3 id=&#34;case-with-explicit-padding&#34;&gt;Case with Explicit Padding&lt;/h3&gt;
 &lt;p&gt;Adding explicit padding eliminates False Sharing but introduces additional costs due to the increased struct size:&lt;/p&gt;
@@ -184,7 +186,8 @@
 0,89%  prueba5  prueba5               [.] sum_x&lt;br&gt;
 0,81%  prueba5  [kernel.kallsyms]     [k] retbleed_return_thunk&lt;br&gt;
 0,76%  prueba5  [kernel.kallsyms]     [k] ___slab_alloc&lt;br&gt;
-0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock&lt;/p&gt;&lt;/blockquote&gt;
+0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;The increased memory usage reduces cache data density, penalizing prefetching and limiting improvements.&lt;/p&gt;
 &lt;h3 id=&#34;case-with-independent-variables&#34;&gt;Case with Independent Variables&lt;/h3&gt;
 &lt;p&gt;Using independent global variables eliminates False Sharing, but performance does not improve significantly:&lt;/p&gt;
@@ -195,7 +198,8 @@
 5,90%  prueba6  prueba6               [.] sum_y&lt;br&gt;
 4,81%  prueba6  [kernel.kallsyms]     [k] native_write_msr&lt;br&gt;
 1,00%  prueba6  [kernel.kallsyms]     [k] _raw_spin_lock&lt;br&gt;
-0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep&lt;/p&gt;&lt;/blockquote&gt;
+0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;This is due to the overhead of explicit synchronization and the latency of accessing global memory.&lt;/p&gt;
 &lt;h3 id=&#34;conclusion-of-perf&#34;&gt;Conclusion of &lt;code&gt;perf&lt;/code&gt;&lt;/h3&gt;
 &lt;p&gt;The analysis of the results obtained with &lt;code&gt;perf&lt;/code&gt; and the measured times for the different configurations reveals how alignment strategies and data design impact performance, explaining the effect in each case.&lt;/p&gt;
@@ -208,151 +212,151 @@
 &lt;p&gt;In this section, I show the speed results in seconds for the program with different ways of declaring the variables in 1,000,000 iterations and with different types of optimization.&lt;/p&gt;
 &lt;p&gt;-O0:&lt;/p&gt;
 &lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;configuration&lt;/th&gt;
-          &lt;th&gt;nº iterations&lt;/th&gt;
-          &lt;th&gt;speed (s)&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Base case&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;123.933620&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;83.217787&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Align complete struct&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;99.541299&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;127.010401&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Variables outside the struct&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;124.819451&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;configuration&lt;/th&gt;
+&lt;th&gt;nº iterations&lt;/th&gt;
+&lt;th&gt;speed (s)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Base case&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;123.933620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;83.217787&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Align complete struct&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;99.541299&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;127.010401&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Variables outside the struct&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;124.819451&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;-O1:&lt;/p&gt;
 &lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;configuration&lt;/th&gt;
-          &lt;th&gt;nº iterations&lt;/th&gt;
-          &lt;th&gt;speed (s)&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Base case&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;120.383218&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;79.891089&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Align complete struct&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;104.526728&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;79.828506&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Variables outside the struct&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;105.029095&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;configuration&lt;/th&gt;
+&lt;th&gt;nº iterations&lt;/th&gt;
+&lt;th&gt;speed (s)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Base case&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;120.383218&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;79.891089&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Align complete struct&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;104.526728&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;79.828506&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Variables outside the struct&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;105.029095&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;-O2:&lt;/p&gt;
 &lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;configuration&lt;/th&gt;
-          &lt;th&gt;nº iterations&lt;/th&gt;
-          &lt;th&gt;speed (s)&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Base case&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;120.622384&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;80.128776&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Align complete struct&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;103.547142&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;79.989479&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Variables outside the struct&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;103.280250&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;configuration&lt;/th&gt;
+&lt;th&gt;nº iterations&lt;/th&gt;
+&lt;th&gt;speed (s)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Base case&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;120.622384&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;80.128776&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Align complete struct&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;103.547142&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;79.989479&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Variables outside the struct&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;103.280250&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;-O3:&lt;/p&gt;
 &lt;table&gt;
-  &lt;thead&gt;
-      &lt;tr&gt;
-          &lt;th&gt;configuration&lt;/th&gt;
-          &lt;th&gt;nº iterations&lt;/th&gt;
-          &lt;th&gt;speed (s)&lt;/th&gt;
-      &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Base case&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;120.887245&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;79.762786&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Align complete struct&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;103.815620&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;79.586391&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-          &lt;td&gt;Variables outside the struct&lt;/td&gt;
-          &lt;td&gt;1000000&lt;/td&gt;
-          &lt;td&gt;101.085188&lt;/td&gt;
-      &lt;/tr&gt;
-  &lt;/tbody&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;configuration&lt;/th&gt;
+&lt;th&gt;nº iterations&lt;/th&gt;
+&lt;th&gt;speed (s)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Base case&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;120.887245&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Align &lt;code&gt;y&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;79.762786&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Align complete struct&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;103.815620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Explicit padding (&lt;code&gt;char[64]&lt;/code&gt;)&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;79.586391&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Variables outside the struct&lt;/td&gt;
+&lt;td&gt;1000000&lt;/td&gt;
+&lt;td&gt;101.085188&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h3 id=&#34;why-optimizations-from--o1-improve-execution-time&#34;&gt;Why optimizations from -O1 improve execution time?&lt;/h3&gt;
 &lt;p&gt;When a program is compiled with optimizations starting from &lt;code&gt;-O1&lt;/code&gt;, the compiler begins to make fundamental adjustments that significantly improve performance. At this level, redundant calculations are eliminated, instructions are reorganized to better utilize CPU resources, and memory accesses are optimized, reducing latency. These automatic changes complement manual optimizations, such as data alignment, by allowing the hardware to operate more efficiently, especially in cases where problems like false sharing have been mitigated.&lt;/p&gt;
@@ -377,10 +381,10 @@
     
     <item>
       <title>Getting Started with ADA</title>
-      <link>http://localhost:1313/BLOG/en/posts/ada-introduction/</link>
+      <link>https://gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/BLOG/en/posts/ada-introduction/</guid>
+      <guid>https://gonzalosilvalde.github.io/BLOG/en/posts/ada-introduction/</guid>
       <description>A practical approach to Ada, an uncommon yet powerful language, ideal for high-security systems. From basic concepts to advanced challenges, discover how I began experimenting with its functions and tools.</description>
       <content>&lt;h2 id=&#34;ada&#34;&gt;ADA&lt;/h2&gt;
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
