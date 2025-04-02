@@ -334,7 +334,8 @@
 2,78%  prueba1  [kernel.kallsyms]     [k] unmap_page_range<br>
 2,46%  prueba1  [kernel.kallsyms]     [k] native_queued_spin_lock_slowpath<br>
 2,11%  prueba1  [kernel.kallsyms]     [k] native_write_msr<br>
-1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p></blockquote>
+1,45%  prueba1  [kernel.kallsyms]     [k] psi_group_change</p>
+</blockquote>
 <h3 id="case-with-y-alignment">Case with <code>y</code> Alignment<a href="#case-with-y-alignment" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Aligning <code>y</code> to 64 bytes eliminates False Sharing:</p>
 <blockquote>
@@ -349,7 +350,8 @@
 1,20%  prueba2  [kernel.kallsyms]     [k] alloc_vmap_area<br>
 1,06%  prueba2  [kernel.kallsyms]     [k] memcpy<br>
 0,85%  prueba2  prueba2               [.] sum_x<br>
-0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p></blockquote>
+0,84%  prueba2  [kernel.kallsyms]     [k] try_charge_memcg</p>
+</blockquote>
 <p>Explicit synchronization dominates resource usage, eliminating bottlenecks in the cache.</p>
 <h3 id="case-with-struct-alignment">Case with Struct Alignment<a href="#case-with-struct-alignment" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Aligning the entire struct does not eliminate False Sharing between <code>x</code> and <code>y</code>, as they remain in the same cache line:</p>
@@ -366,7 +368,8 @@
 0,86%  prueba4  [kernel.kallsyms]     [k] native_read_msr<br>
 0,84%  prueba4  [kernel.kallsyms]     [k] memcg_slab_post_alloc_hook<br>
 0,84%  prueba4  prueba4               [.] sum_x<br>
-0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p></blockquote>
+0,83%  prueba4  [kernel.kallsyms]     [k] retbleed_return_thunk</p>
+</blockquote>
 <p>Although it slightly improves overall performance by optimizing global access to the struct, false sharing persists, limiting the gains.</p>
 <h3 id="case-with-explicit-padding">Case with Explicit Padding<a href="#case-with-explicit-padding" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Adding explicit padding eliminates False Sharing but introduces additional costs due to the increased struct size:</p>
@@ -382,7 +385,8 @@
 0,89%  prueba5  prueba5               [.] sum_x<br>
 0,81%  prueba5  [kernel.kallsyms]     [k] retbleed_return_thunk<br>
 0,76%  prueba5  [kernel.kallsyms]     [k] ___slab_alloc<br>
-0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p></blockquote>
+0,74%  prueba5  [kernel.kallsyms]     [k] _raw_spin_lock</p>
+</blockquote>
 <p>The increased memory usage reduces cache data density, penalizing prefetching and limiting improvements.</p>
 <h3 id="case-with-independent-variables">Case with Independent Variables<a href="#case-with-independent-variables" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Using independent global variables eliminates False Sharing, but performance does not improve significantly:</p>
@@ -393,7 +397,8 @@
 5,90%  prueba6  prueba6               [.] sum_y<br>
 4,81%  prueba6  [kernel.kallsyms]     [k] native_write_msr<br>
 1,00%  prueba6  [kernel.kallsyms]     [k] _raw_spin_lock<br>
-0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p></blockquote>
+0,97%  prueba6  [kernel.kallsyms]     [k] clear_page_rep</p>
+</blockquote>
 <p>This is due to the overhead of explicit synchronization and the latency of accessing global memory.</p>
 <h3 id="conclusion-of-perf">Conclusion of <code>perf</code><a href="#conclusion-of-perf" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>The analysis of the results obtained with <code>perf</code> and the measured times for the different configurations reveals how alignment strategies and data design impact performance, explaining the effect in each case.</p>
@@ -406,151 +411,151 @@
 <p>In this section, I show the speed results in seconds for the program with different ways of declaring the variables in 1,000,000 iterations and with different types of optimization.</p>
 <p>-O0:</p>
 <table>
-  <thead>
-      <tr>
-          <th>configuration</th>
-          <th>nº iterations</th>
-          <th>speed (s)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Base case</td>
-          <td>1000000</td>
-          <td>123.933620</td>
-      </tr>
-      <tr>
-          <td>Align <code>y</code></td>
-          <td>1000000</td>
-          <td>83.217787</td>
-      </tr>
-      <tr>
-          <td>Align complete struct</td>
-          <td>1000000</td>
-          <td>99.541299</td>
-      </tr>
-      <tr>
-          <td>Explicit padding (<code>char[64]</code>)</td>
-          <td>1000000</td>
-          <td>127.010401</td>
-      </tr>
-      <tr>
-          <td>Variables outside the struct</td>
-          <td>1000000</td>
-          <td>124.819451</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th>configuration</th>
+<th>nº iterations</th>
+<th>speed (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base case</td>
+<td>1000000</td>
+<td>123.933620</td>
+</tr>
+<tr>
+<td>Align <code>y</code></td>
+<td>1000000</td>
+<td>83.217787</td>
+</tr>
+<tr>
+<td>Align complete struct</td>
+<td>1000000</td>
+<td>99.541299</td>
+</tr>
+<tr>
+<td>Explicit padding (<code>char[64]</code>)</td>
+<td>1000000</td>
+<td>127.010401</td>
+</tr>
+<tr>
+<td>Variables outside the struct</td>
+<td>1000000</td>
+<td>124.819451</td>
+</tr>
+</tbody>
 </table>
 <p>-O1:</p>
 <table>
-  <thead>
-      <tr>
-          <th>configuration</th>
-          <th>nº iterations</th>
-          <th>speed (s)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Base case</td>
-          <td>1000000</td>
-          <td>120.383218</td>
-      </tr>
-      <tr>
-          <td>Align <code>y</code></td>
-          <td>1000000</td>
-          <td>79.891089</td>
-      </tr>
-      <tr>
-          <td>Align complete struct</td>
-          <td>1000000</td>
-          <td>104.526728</td>
-      </tr>
-      <tr>
-          <td>Explicit padding (<code>char[64]</code>)</td>
-          <td>1000000</td>
-          <td>79.828506</td>
-      </tr>
-      <tr>
-          <td>Variables outside the struct</td>
-          <td>1000000</td>
-          <td>105.029095</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th>configuration</th>
+<th>nº iterations</th>
+<th>speed (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base case</td>
+<td>1000000</td>
+<td>120.383218</td>
+</tr>
+<tr>
+<td>Align <code>y</code></td>
+<td>1000000</td>
+<td>79.891089</td>
+</tr>
+<tr>
+<td>Align complete struct</td>
+<td>1000000</td>
+<td>104.526728</td>
+</tr>
+<tr>
+<td>Explicit padding (<code>char[64]</code>)</td>
+<td>1000000</td>
+<td>79.828506</td>
+</tr>
+<tr>
+<td>Variables outside the struct</td>
+<td>1000000</td>
+<td>105.029095</td>
+</tr>
+</tbody>
 </table>
 <p>-O2:</p>
 <table>
-  <thead>
-      <tr>
-          <th>configuration</th>
-          <th>nº iterations</th>
-          <th>speed (s)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Base case</td>
-          <td>1000000</td>
-          <td>120.622384</td>
-      </tr>
-      <tr>
-          <td>Align <code>y</code></td>
-          <td>1000000</td>
-          <td>80.128776</td>
-      </tr>
-      <tr>
-          <td>Align complete struct</td>
-          <td>1000000</td>
-          <td>103.547142</td>
-      </tr>
-      <tr>
-          <td>Explicit padding (<code>char[64]</code>)</td>
-          <td>1000000</td>
-          <td>79.989479</td>
-      </tr>
-      <tr>
-          <td>Variables outside the struct</td>
-          <td>1000000</td>
-          <td>103.280250</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th>configuration</th>
+<th>nº iterations</th>
+<th>speed (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base case</td>
+<td>1000000</td>
+<td>120.622384</td>
+</tr>
+<tr>
+<td>Align <code>y</code></td>
+<td>1000000</td>
+<td>80.128776</td>
+</tr>
+<tr>
+<td>Align complete struct</td>
+<td>1000000</td>
+<td>103.547142</td>
+</tr>
+<tr>
+<td>Explicit padding (<code>char[64]</code>)</td>
+<td>1000000</td>
+<td>79.989479</td>
+</tr>
+<tr>
+<td>Variables outside the struct</td>
+<td>1000000</td>
+<td>103.280250</td>
+</tr>
+</tbody>
 </table>
 <p>-O3:</p>
 <table>
-  <thead>
-      <tr>
-          <th>configuration</th>
-          <th>nº iterations</th>
-          <th>speed (s)</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Base case</td>
-          <td>1000000</td>
-          <td>120.887245</td>
-      </tr>
-      <tr>
-          <td>Align <code>y</code></td>
-          <td>1000000</td>
-          <td>79.762786</td>
-      </tr>
-      <tr>
-          <td>Align complete struct</td>
-          <td>1000000</td>
-          <td>103.815620</td>
-      </tr>
-      <tr>
-          <td>Explicit padding (<code>char[64]</code>)</td>
-          <td>1000000</td>
-          <td>79.586391</td>
-      </tr>
-      <tr>
-          <td>Variables outside the struct</td>
-          <td>1000000</td>
-          <td>101.085188</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th>configuration</th>
+<th>nº iterations</th>
+<th>speed (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base case</td>
+<td>1000000</td>
+<td>120.887245</td>
+</tr>
+<tr>
+<td>Align <code>y</code></td>
+<td>1000000</td>
+<td>79.762786</td>
+</tr>
+<tr>
+<td>Align complete struct</td>
+<td>1000000</td>
+<td>103.815620</td>
+</tr>
+<tr>
+<td>Explicit padding (<code>char[64]</code>)</td>
+<td>1000000</td>
+<td>79.586391</td>
+</tr>
+<tr>
+<td>Variables outside the struct</td>
+<td>1000000</td>
+<td>101.085188</td>
+</tr>
+</tbody>
 </table>
 <h3 id="why-optimizations-from--o1-improve-execution-time">Why optimizations from -O1 improve execution time?<a href="#why-optimizations-from--o1-improve-execution-time" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>When a program is compiled with optimizations starting from <code>-O1</code>, the compiler begins to make fundamental adjustments that significantly improve performance. At this level, redundant calculations are eliminated, instructions are reorganized to better utilize CPU resources, and memory accesses are optimized, reducing latency. These automatic changes complement manual optimizations, such as data alignment, by allowing the hardware to operate more efficiently, especially in cases where problems like false sharing have been mitigated.</p>

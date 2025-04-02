@@ -5,7 +5,6 @@
     <link>https://gonzalosilvalde.github.io/BLOG/en/tags/</link>
     <description>Recent content in Tags on Gonzalo Silvalde</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
     <lastBuildDate>Mon, 13 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://gonzalosilvalde.github.io/BLOG/en/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C</title>
@@ -48,7 +47,7 @@
     </item>
     
     <item>
-      <title>Programming</title>
+      <title>programming</title>
       <link>https://gonzalosilvalde.github.io/BLOG/en/tags/programming/</link>
       <pubDate>Mon, 13 Jan 2025 00:00:00 +0000</pubDate>
       
@@ -58,7 +57,7 @@
     </item>
     
     <item>
-      <title>Ada-Lang</title>
+      <title>ada-lang</title>
       <link>https://gonzalosilvalde.github.io/BLOG/en/tags/ada-lang/</link>
       <pubDate>Thu, 07 Nov 2024 00:00:00 +0000</pubDate>
       
