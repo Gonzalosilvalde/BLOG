@@ -439,11 +439,6 @@ Me desenvuelvo muy bien en ambientes de equipo, asumiendo a menudo roles de lide
 &lt;td&gt;Expose constructors&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://github.com/bytecodealliance/wasmtime/commit/df4cb6eb32c062280f94c61e302e412782e2ea1f&#34;&gt;Commit df4cb6e&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Wasmtime&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;ISLE wrapper for constructing constants &lt;em&gt;(MR abierto)&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://github.com/bytecodealliance/wasmtime/pull/10528&#34;&gt;MR #10528&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;strong&gt;Proyectos Personales&lt;/strong&gt;&lt;/p&gt;
