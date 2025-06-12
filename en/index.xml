@@ -396,9 +396,9 @@ I thrive in team environments, often taking on leadership roles, and I enjoy tac
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Proyecto&lt;/th&gt;
-&lt;th&gt;Contribución&lt;/th&gt;
-&lt;th&gt;Enlace&lt;/th&gt;
+&lt;th&gt;Project&lt;/th&gt;
+&lt;th&gt;Contribution&lt;/th&gt;
+&lt;th&gt;Link&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
@@ -426,6 +426,11 @@ I thrive in team environments, often taking on leadership roles, and I enjoy tac
 &lt;td&gt;&lt;strong&gt;Debian (libfabric)&lt;/strong&gt;&lt;/td&gt;
 &lt;td&gt;Fix FTBFS on 32-bit architectures&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;https://salsa.debian.org/hpc-team/libfabric/-/commit/4260159f6cccb80113c85eb909d8f759122710fe&#34;&gt;Commit 4260159&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;libfabric&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;Support 32-bit architectures&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://github.com/ofiwg/libfabric/pull/11028&#34;&gt;PR #11028&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;strong&gt;Wasmtime&lt;/strong&gt;&lt;/td&gt;
